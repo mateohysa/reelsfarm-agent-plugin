@@ -1,0 +1,51 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "reelsfarm",
+  "version": "1.0.0",
+  "description": "Create AI avatars, product scenes, UGC videos, and slideshows, then schedule and publish short-form social content.",
+  "author": {
+    "name": "ReelsFarm",
+    "url": "https://reelsfarm.com"
+  },
+  "homepage": "https://reelsfarm.com/mcp",
+  "repository": "https://github.com/mateohysa/reelsfarm-agent-plugin",
+  "license": "MIT",
+  "keywords": [
+    "reelsfarm",
+    "mcp",
+    "ugc",
+    "social-media",
+    "content-creation",
+    "video",
+    "slideshow",
+    "scheduling"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "ReelsFarm",
+        "shortDescription": "Create and publish short-form content with AI.",
+        "longDescription": "Use ReelsFarm to generate AI avatars, product scenes, UGC videos, and slideshows, then schedule or publish approved content through connected social accounts.",
+        "developerName": "ReelsFarm",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://reelsfarm.com/mcp",
+        "privacyPolicyURL": "https://reelsfarm.com/privacy",
+        "termsOfServiceURL": "https://reelsfarm.com/terms",
+        "defaultPrompt": [
+          "Create a UGC video draft from my saved ReelsFarm assets.",
+          "Build a product slideshow and prepare it for my review.",
+          "Schedule an approved ReelsFarm video for TikTok."
+        ],
+        "brandColor": "#2563EB",
+        "composerIcon": "./assets/logo-square.png",
+        "logo": "./assets/logo-square.png",
+        "screenshots": [
+          "./assets/product-studio.png",
+          "./assets/ugc-videos.png",
+          "./assets/slideshows.png"
+        ]
+      }
+    }
+  }
+}

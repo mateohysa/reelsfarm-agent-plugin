@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "reelsfarm": {
+      "type": "http",
+      "url": "https://mcp.reelsfarm.com/mcp",
+      "note": "Hosted ReelsFarm MCP server. Sign in with OAuth. An active plan or eligible trial is required. New connections begin in Review mode."
+    }
+  }
+}

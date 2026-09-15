@@ -1,0 +1,22 @@
+{
+  "name": "reelsfarm-agent-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Public Agent Plugin package for the hosted ReelsFarm MCP server.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "validate:package": "node scripts/validate-public-package.mjs",
+    "validate:schemas": "node scripts/validate-schemas.mjs",
+    "validate:live": "node scripts/check-live-server.mjs",
+    "test": "npm run validate:package && npm run validate:schemas",
+    "audit:release": "npm test && npm run validate:live",
+    "xai:entry": "node scripts/render-xai-entry.mjs"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0"
+  }
+}
