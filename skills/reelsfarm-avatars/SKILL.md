@@ -31,6 +31,12 @@ If the prepare call already executed under the connection policy, do not call th
 
 Poll a returned avatar job with `reelsfarm_get_avatar_job_status`. Use `reelsfarm_get_image_generation_job_status` when conversation details or a normalized result are needed. Increase the polling interval after each unchanged response. Stop polling when the job is complete, failed, or cancelled.
 
+## Result integrity and handoff
+
+When the user chooses ReelsFarm, keep generation inside ReelsFarm. Do not use a client-native image generator as a substitute. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Claim that ReelsFarm created an avatar only when the response has `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and a ReelsFarm avatar identifier and URL.
+
+For avatar-to-video requests, complete this avatar workflow first. Pass only the completed `avatar.imageUrl` from `reelsfarm_get_avatar_job_status` to `reelsfarm_prepare_generate_hook`. Then follow the separate video confirmation and polling workflow. Never use `reelsfarm_create_product_upload_sessions` for an avatar or this handoff.
+
 ## Idempotency
 
 Create one stable `idempotencyKey` for each logical prepare or mutation request. Reuse the same key after a timeout, connection error, or uncertain response. Use a new key only when the user changes the requested result.

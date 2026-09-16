@@ -29,6 +29,10 @@ Show the exact prepared stage, credit estimate, slideshow identifier, slide coun
 
 Poll text generation with `reelsfarm_get_slideshow_text_job_status`. Poll revisions with `reelsfarm_get_slideshow_revision_job_status`. Poll finalization with `reelsfarm_get_slideshow_export_job_status`. Poll MP4 export with `reelsfarm_get_slideshow_video_export_job_status`. Increase the interval after unchanged states and stop at complete, failed, or cancelled.
 
+## Result integrity
+
+Use `executionState` as the authoritative mutation state. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Attribute generated or exported media to ReelsFarm only after the ReelsFarm job reports completion and returns the expected ReelsFarm asset URL. Do not present prepared text, unfinished rendering, or a client-native asset as a completed ReelsFarm slideshow export.
+
 ## Idempotency
 
 Use one stable `idempotencyKey` per logical text generation, revision, draft mutation, finalization, or export. Reuse the key after a timeout or ambiguous response. Use a new key when the requested slide state or output changes.

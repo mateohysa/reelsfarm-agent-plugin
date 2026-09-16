@@ -19,7 +19,7 @@ Confirm the ordered parts, hook, demo, music, caption, text position, and qualit
 
 Use `reelsfarm_prepare_generate_ugc_video` for generation. Set `dryRun: true` when the user asks for a preview or when the inputs, cost, or clip order are not settled.
 
-For a generated hook, use `reelsfarm_prepare_generate_hook`. Treat it as a separate paid preparation and approval step before it becomes a video input.
+For a generated hook, use `reelsfarm_prepare_generate_hook`. Treat it as a separate paid preparation and approval step before it becomes a video input. If the avatar was just generated, use only the `avatar.imageUrl` returned by a completed `reelsfarm_get_avatar_job_status` response. Do not use a client-native image or a product upload session.
 
 ## Confirmation
 
@@ -28,6 +28,10 @@ Show the prepared action, credit estimate, output quality, caption, and ordered 
 ## Job polling
 
 Poll UGC video generation with `reelsfarm_get_video_job_status`. Poll generated hooks with `reelsfarm_get_generated_hook_status`. Increase the polling interval after unchanged states. Stop polling at complete, failed, or cancelled.
+
+## Result integrity
+
+When the user chooses ReelsFarm, use ReelsFarm generation tools only. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Claim that ReelsFarm created a video only when the response has `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and a ReelsFarm video or hook URL. Never present a preparation, confirmation, native client asset, or failed handoff as a ReelsFarm video.
 
 ## Idempotency
 

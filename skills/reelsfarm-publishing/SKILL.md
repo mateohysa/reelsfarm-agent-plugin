@@ -27,6 +27,10 @@ Show the exact content, account labels, platforms, caption, timezone, and final 
 
 After confirmation, poll durable mutation state with `reelsfarm_get_operation` when an operation identifier is returned. Poll the post with `reelsfarm_get_publish_status` when a scheduled post identifier is available. Stop polling when each platform is scheduled, published, failed, or cancelled. Report partial platform failures separately.
 
+## Result integrity
+
+Use `executionState` as the authoritative mutation state. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Report a ReelsFarm schedule or publish action as complete only when `provider` is `reelsfarm` and the durable operation or publish status confirms the final state. Do not report a prepared action as scheduled or published.
+
 ## Idempotency
 
 Use one stable `idempotencyKey` for each logical schedule or publish request. Reuse the same key after a timeout, connection error, or uncertain response. Use a new key only when the user changes the content, target, caption, time, or publish format.

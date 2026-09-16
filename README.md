@@ -20,6 +20,8 @@ The client opens the ReelsFarm OAuth flow when you connect. Do not add API keys,
 
 New OAuth connections begin in Review mode. The skills require clear user approval before they call `reelsfarm_confirm_action`.
 
+Generated media is attributed to ReelsFarm only when the server reports `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and returns the completed ReelsFarm asset. Avatar-to-video workflows pass the completed ReelsFarm avatar URL directly to the ReelsFarm hook generator.
+
 ## Install
 
 ### Cursor

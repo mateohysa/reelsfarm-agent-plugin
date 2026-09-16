@@ -120,7 +120,7 @@ const plugin = JSON.parse(await fs.readFile(path.join(root, 'plugin.json'), 'utf
 const portableMcp = JSON.parse(await fs.readFile(path.join(root, 'mcp.json'), 'utf8'));
 const vendorMcp = JSON.parse(await fs.readFile(path.join(root, '.mcp.json'), 'utf8'));
 assert.equal(plugin.name, 'reelsfarm');
-assert.equal(plugin.version, '1.0.0');
+assert.equal(plugin.version, '1.0.1');
 assert.equal(plugin.license, 'MIT');
 assert.deepEqual(plugin.extensions?.['com.openai']?.interface?.capabilities, ['Read', 'Write']);
 assert.equal(plugin.extensions?.['com.openai']?.interface?.category, 'Productivity');
@@ -171,10 +171,22 @@ for (const skill of expectedSkills) {
     'idempotencyKey',
     'reelsfarm_get_operation',
     'Safe stopping',
+    'Result integrity',
+    'executionState',
   ]) {
     assert.ok(source.includes(required), `${relative} must define ${required}`);
   }
 }
+
+const avatarSkill = await fs.readFile(path.join(skillRoot, 'reelsfarm-avatars', 'SKILL.md'), 'utf8');
+const videoSkill = await fs.readFile(path.join(skillRoot, 'reelsfarm-ugc-videos', 'SKILL.md'), 'utf8');
+for (const source of [avatarSkill, videoSkill]) {
+  for (const required of ['provider: reelsfarm', 'executionState: COMPLETED', 'assetCreated: true']) {
+    assert.ok(source.includes(required), `Avatar and video skills must enforce ${required}`);
+  }
+}
+assert.ok(avatarSkill.includes('reelsfarm_prepare_generate_hook'), 'Avatar skill must define the avatar-to-video handoff');
+assert.ok(avatarSkill.includes('Never use `reelsfarm_create_product_upload_sessions`'), 'Avatar skill must reject product uploads for avatar handoff');
 
 if (errors.length > 0) {
   throw new Error(`Public package security audit failed:\n${errors.map((error) => `- ${error}`).join('\n')}`);

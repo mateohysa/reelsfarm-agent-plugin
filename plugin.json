@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "reelsfarm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create AI avatars, product scenes, UGC videos, and slideshows, then schedule and publish short-form social content.",
   "author": {
     "name": "ReelsFarm",

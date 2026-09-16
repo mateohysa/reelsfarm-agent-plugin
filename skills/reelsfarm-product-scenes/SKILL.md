@@ -19,7 +19,7 @@ Confirm the exact avatar, product image, scene instruction, and product handling
 
 For a revision, use `reelsfarm_get_image_generation_conversation` and preserve `conversationId` and `parentGenerationId` from the selected prior turn.
 
-If no product asset exists, use `reelsfarm_create_product_upload_sessions` only when the client can perform the returned HTTPS upload. Keep the upload order unchanged. Complete successful uploads with `reelsfarm_complete_product_upload_sessions`. Do not expose upload details outside the current client session.
+If no product asset exists, use `reelsfarm_create_product_upload_sessions` only for product images and only when the client can perform the returned HTTPS upload. Never use product upload sessions for avatars, characters, or avatar-to-video handoff. Keep the upload order unchanged. Complete successful uploads with `reelsfarm_complete_product_upload_sessions`. Do not expose upload details outside the current client session.
 
 ## Confirmation
 
@@ -28,6 +28,10 @@ Show the prepared action, credit estimate, selected avatar, selected product, an
 ## Job polling
 
 Poll the returned job with `reelsfarm_get_product_scene_job_status`. Use `reelsfarm_get_image_generation_job_status` for the normalized conversation turn. Increase the polling interval after unchanged responses. Stop at a complete, failed, or cancelled state.
+
+## Result integrity
+
+Use `executionState` as the authoritative mutation state. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Claim that ReelsFarm created a product scene only after the ReelsFarm job reports completion and returns the scene identifier and URL. Do not substitute or attribute a client-native image.
 
 ## Idempotency
 
