@@ -13,6 +13,10 @@ Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_accoun
 
 Use exact returned identifiers and URLs. Never infer an asset from a similar name when more than one match exists.
 
+## ChatGPT follow-ups
+
+In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
+
 ## Preparation
 
 Confirm the ordered parts, hook, demo, music, caption, text position, and quality. Keep the `parts` array in the user-approved order. Use `reelsfarm_save_draft` when the user wants an editable draft without generation.

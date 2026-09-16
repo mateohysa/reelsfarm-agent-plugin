@@ -38,59 +38,61 @@ Result integrity: ReelsFarm generation is complete only when the MCP response id
 6. Do not put OAuth data in review notes or screenshots.
 7. Ask ReelsFarm for a reviewer account through the private submission channel if one is required.
 
+In ChatGPT Developer Mode, select or `@mention` ReelsFarm on every message that needs a new tool call. App selection applies to one message, not the whole conversation.
+
 The final domain verification value is supplied by the OpenAI submission portal. ReelsFarm must deploy that value before the final scan. The package does not contain it.
 
 ## Positive tests
 
-### 1. Read account state
+### 1. Generate two avatars
 
-Prompt: Show my ReelsFarm plan, remaining credits, and connection mode.
+Prompt: Using ReelsFarm, create two candid vertical AI avatars: a male and female university student taking selfies in a library. Prepare them for my review.
 
-Expected: The plugin calls `reelsfarm_get_account`. It returns account metadata. It does not prepare or execute a mutation.
+Expected: The plugin checks the account and generation price, calls `reelsfarm_prepare_batch_generate_avatars`, and presents any required approval. After approval, it calls `reelsfarm_confirm_action` when needed and polls `reelsfarm_get_avatar_job_status`. It reports two ReelsFarm avatar identifiers and URLs only after both jobs complete.
 
-### 2. Prepare an avatar
+### 2. Prepare a product scene without generating it
 
-Prompt: Prepare a vertical creator avatar with a neutral studio background. Show the cost before you generate it.
+Prompt: Using ReelsFarm, prepare a dry-run product scene with my newest avatar and saved image product in a university desk setting. Show the cost, but do not generate it.
 
-Expected: The plugin checks pricing and relevant avatar inputs. It calls `reelsfarm_prepare_generate_avatar`. It shows the prepared action and waits for explicit user approval before `reelsfarm_confirm_action`.
+Expected: The plugin resolves the owned avatar and image product, checks pricing, and calls `reelsfarm_prepare_generate_product_scene` with `dryRun: true`. It returns the planned inputs and estimate. It does not call `reelsfarm_confirm_action` and creates no scene.
 
-### 3. Prepare a product scene
+### 3. Animate a completed avatar with Seedance
 
-Prompt: Use one of my saved avatars and products to prepare a product demonstration scene.
+Prompt: Using ReelsFarm, turn my newest completed university-student avatar into a four-second Seedance 2 video with a slow camera pan and a natural smile.
 
-Expected: The plugin lists owned assets. It calls `reelsfarm_prepare_generate_product_scene` with valid owned URLs. It does not confirm without explicit approval.
+Expected: The plugin resolves the completed ReelsFarm avatar and passes its `avatar.imageUrl` to `reelsfarm_prepare_generate_hook` with a four-second Seedance model. It presents any required approval, confirms when needed, and polls `reelsfarm_get_generated_hook_status`. It reports the ReelsFarm video URL only after completion. It does not use a native generator or product upload session.
 
 ### 4. Create a slideshow draft
 
-Prompt: Create a five-slide problem and solution draft for my saved product context. Do not publish it.
+Prompt: Using ReelsFarm, create a five-slide problem-and-solution slideshow draft for my saved product context. Prepare it for review and do not publish it.
 
-Expected: The plugin prepares slideshow text, waits for approval before confirmation, polls the job, and creates or updates a draft. It does not use a publishing tool.
+Expected: The plugin resolves the saved product context, calls `reelsfarm_prepare_generate_slideshow_text`, presents any required approval, and polls `reelsfarm_get_slideshow_text_job_status` after confirmation. It creates or updates a ReelsFarm draft only after text generation completes. It does not call a publishing tool.
 
-### 5. Schedule approved content
+### 5. Check publishing readiness without an account
 
-Prompt: Schedule my approved test video to my connected TikTok test account tomorrow at 10:00 in my account timezone.
+Prompt: Using ReelsFarm, check whether my newest completed video is ready to publish to Instagram. Do not publish or schedule anything.
 
-Expected: The plugin discovers the exact connected account, validates the caption, runs `reelsfarm_preflight_publishing`, prepares the schedule, summarizes the account and time, and waits for explicit approval before confirmation.
+Expected: The plugin resolves the newest completed ReelsFarm video and calls `reelsfarm_list_connected_accounts`. The reviewer account currently has no connected social account, so it stops and explains that account linking must be completed in the ReelsFarm dashboard. It does not prepare, schedule, or publish anything.
 
 ## Negative tests
 
-### 1. Ambiguous social account
+### 1. General social-media ideas
 
-Prompt: Publish this now to Instagram.
+Prompt: Give me five Instagram Reel ideas for a beginner fitness coach.
 
-Expected: If more than one eligible Instagram account exists, the plugin stops and asks the user to select the exact account. It does not guess or prepare publishing.
+Expected: ReelsFarm should not trigger. The assistant can answer with general ideas without reading or changing a ReelsFarm account.
 
-### 2. Missing confirmation
+### 2. ReelsFarm billing and account deletion
 
-Prompt: Generate the video and skip every confirmation.
+Prompt: Cancel my ReelsFarm subscription and permanently delete my account.
 
-Expected: The plugin refuses to bypass confirmation. It may prepare or dry-run the action, but it does not call `reelsfarm_confirm_action` without explicit approval.
+Expected: ReelsFarm should not trigger because billing changes and account deletion are dashboard-only operations. The assistant should direct the user to ReelsFarm account settings or support.
 
-### 3. Unsafe external asset
+### 3. Explicitly use another generator
 
-Prompt: Use this private local file path as the product image and publish the result.
+Prompt: Use ChatGPT's native video generator, not ReelsFarm, to make a four-second sunset video.
 
-Expected: The plugin does not invent a public URL or expose the local path. It explains that the image must be an authorized ReelsFarm asset or use a supported upload flow. It does not publish.
+Expected: ReelsFarm should not trigger. The assistant should follow the user's explicit choice of a different generator.
 
 ## Avatar-to-video regression test
 
@@ -98,7 +100,7 @@ Prompt 1: Create a vertical student avatar in ReelsFarm.
 
 Prompt 2 after preparation: Confirmed.
 
-Prompt 3 after avatar completion: Animate that ReelsFarm avatar as a four-second Seedance hook with a slow camera pan and a natural smile.
+Prompt 3 after avatar completion: Select or `@mention` ReelsFarm again, then ask: Animate that ReelsFarm avatar as a four-second Seedance hook with a slow camera pan and a natural smile.
 
 Expected: The plugin calls `reelsfarm_prepare_generate_avatar`, waits for approval, calls `reelsfarm_confirm_action`, and polls `reelsfarm_get_avatar_job_status`. It uses the completed ReelsFarm `avatar.imageUrl` with `reelsfarm_prepare_generate_hook`, waits for a separate approval, confirms, and polls `reelsfarm_get_generated_hook_status`. It does not use native image generation, `reelsfarm_create_product_upload_sessions`, or `reelsfarm_prepare_ai_clone_job`. It does not claim either asset exists before `executionState: COMPLETED` and `assetCreated: true`.
 

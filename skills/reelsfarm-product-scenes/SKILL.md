@@ -13,6 +13,10 @@ Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_accoun
 
 Prefer existing owned product assets. Do not invent a filename, identifier, source image, or public URL.
 
+## ChatGPT follow-ups
+
+In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
+
 ## Preparation
 
 Confirm the exact avatar, product image, scene instruction, and product handling constraints. Use `reelsfarm_prepare_generate_product_scene`. Use `dryRun: true` when the user wants a preview or when cost and inputs are not settled.

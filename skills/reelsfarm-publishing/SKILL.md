@@ -13,6 +13,10 @@ Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_accoun
 
 Never choose an account from a platform name alone when more than one eligible account exists. Ask the user to select the exact account. Social account linking and credential changes remain dashboard-only.
 
+## ChatGPT follow-ups
+
+In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
+
 ## Preparation
 
 Confirm the content, content type, publish format, caption, timezone, exact account, and scheduled time. Use `reelsfarm_validate_caption` for all selected platforms. Then run `reelsfarm_preflight_publishing` with the exact targets.
