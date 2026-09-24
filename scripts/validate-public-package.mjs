@@ -120,7 +120,7 @@ const plugin = JSON.parse(await fs.readFile(path.join(root, 'plugin.json'), 'utf
 const portableMcp = JSON.parse(await fs.readFile(path.join(root, 'mcp.json'), 'utf8'));
 const vendorMcp = JSON.parse(await fs.readFile(path.join(root, '.mcp.json'), 'utf8'));
 assert.equal(plugin.name, 'reelsfarm');
-assert.equal(plugin.version, '1.0.2');
+assert.equal(plugin.version, '1.0.3');
 assert.equal(plugin.license, 'MIT');
 assert.deepEqual(plugin.extensions?.['com.openai']?.interface?.capabilities, ['Read', 'Write']);
 assert.equal(plugin.extensions?.['com.openai']?.interface?.category, 'Productivity');

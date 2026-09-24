@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3 - 2026-09-25
+
+- Updated the composer and listing logo with a white outline for dark-mode visibility.
+
 All notable changes to this public plugin package appear here.
 
 ## 1.0.2 - 2026-09-25
