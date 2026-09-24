@@ -120,7 +120,7 @@ const plugin = JSON.parse(await fs.readFile(path.join(root, 'plugin.json'), 'utf
 const portableMcp = JSON.parse(await fs.readFile(path.join(root, 'mcp.json'), 'utf8'));
 const vendorMcp = JSON.parse(await fs.readFile(path.join(root, '.mcp.json'), 'utf8'));
 assert.equal(plugin.name, 'reelsfarm');
-assert.equal(plugin.version, '1.0.1');
+assert.equal(plugin.version, '1.0.2');
 assert.equal(plugin.license, 'MIT');
 assert.deepEqual(plugin.extensions?.['com.openai']?.interface?.capabilities, ['Read', 'Write']);
 assert.equal(plugin.extensions?.['com.openai']?.interface?.category, 'Productivity');
@@ -166,6 +166,10 @@ for (const skill of expectedSkills) {
   assert.ok(frontmatter.description.length >= 40, `${relative} needs a useful trigger description`);
   for (const required of [
     'Tool discovery',
+    'Connection mode',
+    'Creator',
+    'Autopilot',
+    'dryRun: true',
     'explicit user approval',
     'reelsfarm_confirm_action',
     'idempotencyKey',

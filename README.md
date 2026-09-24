@@ -18,7 +18,11 @@ The package includes five guided workflows:
 
 The client opens the ReelsFarm OAuth flow when you connect. Do not add API keys, headers, or local environment settings to the included MCP files.
 
-New OAuth connections begin in Review mode. The skills require clear user approval before they call `reelsfarm_confirm_action`.
+Targets ReelsFarm MCP 3.3.0, contract `2026-09-24.1`, with 107 public tools.
+
+New OAuth connections begin in Review mode. The skills require clear user approval before they call `reelsfarm_confirm_action`. Creator can execute authorized content work immediately. Autopilot can also schedule and publish. The skills read the effective mode and do not confirm an action that already executed.
+
+Publishing workflows use the account-specific preflight settings schema, rules, and known limits. Generation and export workflows use bounded job waits and recorded progress.
 
 Generated media is attributed to ReelsFarm only when the server reports `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and returns the completed ReelsFarm asset. Avatar-to-video workflows pass the completed ReelsFarm avatar URL directly to the ReelsFarm hook generator.
 

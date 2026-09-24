@@ -17,6 +17,12 @@ Never invent an asset identifier or URL. Use only an owned ReelsFarm asset or a 
 
 In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
 
+## Connection mode
+
+Read the effective mode from `reelsfarm_get_account` before any mutation. Review returns a prepared confirmation. Creator can execute allowed content work immediately but blocks publishing and automation activation. Autopilot can also execute publishing and automation work within the granted scope and server limits. Use only the actions the user requested. Never change the connection mode to bypass a restriction.
+
+For an authorized action with settled inputs and cost, call the prepare tool with one stable `idempotencyKey`. A prepare tool can execute immediately in Creator or Autopilot. If the response contains a `confirmationId`, follow the confirmation section below. If it already executed, continue with its operation or job. Do not request another approval merely because the tool name starts with prepare. Use `dryRun: true` for previews or unresolved inputs.
+
 ## Preparation
 
 Confirm the intended person, framing, aspect ratio, prompt, model controls, and source image before generation. Use `reelsfarm_prepare_generate_avatar` with `dryRun: true` when the user asks for a preview or when cost or inputs are not settled.
@@ -27,13 +33,15 @@ To save an approved image as a character, use `reelsfarm_prepare_save_character`
 
 ## Confirmation
 
+Apply this section only when the server returns a prepared confirmation.
+
 Show the prepared action, credit estimate, source image, and expected result. Get explicit user approval before calling `reelsfarm_confirm_action`. Never treat the original creation request as approval of a later prepared confirmation.
 
 If the prepare call already executed under the connection policy, do not call the confirmation tool again.
 
 ## Job polling
 
-Poll a returned avatar job with `reelsfarm_get_avatar_job_status`. Use `reelsfarm_get_image_generation_job_status` when conversation details or a normalized result are needed. Increase the polling interval after each unchanged response. Stop polling when the job is complete, failed, or cancelled.
+Poll a returned avatar job with `reelsfarm_get_avatar_job_status`. Use `reelsfarm_get_image_generation_job_status` when conversation details or a normalized result are needed. Stop polling when the job is complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
 
 ## Result integrity and handoff
 

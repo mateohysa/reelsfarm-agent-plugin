@@ -17,13 +17,21 @@ Never choose an account from a platform name alone when more than one eligible a
 
 In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
 
+## Connection mode
+
+Read the effective mode from `reelsfarm_get_account` before any mutation. Review returns a prepared confirmation. Creator can execute allowed content work immediately but blocks publishing and automation activation. Autopilot can also execute publishing and automation work within the granted scope and server limits. Use only the actions the user requested. Never change the connection mode to bypass a restriction.
+
+For an authorized action with settled inputs and cost, call the prepare tool with one stable `idempotencyKey`. A prepare tool can execute immediately in Creator or Autopilot. If the response contains a `confirmationId`, follow the confirmation section below. If it already executed, continue with its operation or job. Do not request another approval merely because the tool name starts with prepare. Use `dryRun: true` for previews or unresolved inputs.
+
 ## Preparation
 
-Confirm the content, content type, publish format, caption, timezone, exact account, and scheduled time. Use `reelsfarm_validate_caption` for all selected platforms. Then run `reelsfarm_preflight_publishing` with the exact targets.
+Confirm the content, content type, publish format, caption, timezone, exact account, and scheduled time. Use `reelsfarm_validate_caption` for all selected platforms. Then run `reelsfarm_preflight_publishing` with the exact content, publish format, and connection IDs. Read each target’s `settingsSchema`, `rules`, and `limits`. Build each `platforms` entry from that account-specific schema. `ready` checks account and media readiness; it does not mean all required settings are supplied. Missing limits are unknown. Integration targets can expose fewer settings than native connections.
 
 Resolve every preflight error before preparation. Use `reelsfarm_prepare_schedule_post` for a future time and `reelsfarm_prepare_publish_now` for immediate publishing. Use `dryRun: true` when the user requests a preview or when any destination, caption, time, or platform setting is not final.
 
 ## Confirmation
+
+Apply this section only when the server returns a prepared confirmation.
 
 Show the exact content, account labels, platforms, caption, timezone, and final scheduled time or immediate action. Get explicit user approval before calling `reelsfarm_confirm_action`. Do not treat approval of the content itself as approval to publish. Do not confirm if preflight is stale or if the prepare call already executed.
 

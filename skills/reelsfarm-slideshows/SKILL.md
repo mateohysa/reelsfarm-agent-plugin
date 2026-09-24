@@ -17,6 +17,12 @@ Use only authorized ReelsFarm image URLs in slideshow slides. Do not invent asse
 
 In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
 
+## Connection mode
+
+Read the effective mode from `reelsfarm_get_account` before any mutation. Review returns a prepared confirmation. Creator can execute allowed content work immediately but blocks publishing and automation activation. Autopilot can also execute publishing and automation work within the granted scope and server limits. Use only the actions the user requested. Never change the connection mode to bypass a restriction.
+
+For an authorized action with settled inputs and cost, call the prepare tool with one stable `idempotencyKey`. A prepare tool can execute immediately in Creator or Autopilot. If the response contains a `confirmationId`, follow the confirmation section below. If it already executed, continue with its operation or job. Do not request another approval merely because the tool name starts with prepare. Use `dryRun: true` for previews or unresolved inputs.
+
 ## Preparation
 
 Confirm the slideshow type, slide count, product context, text brief, visual source, title, and output format.
@@ -27,11 +33,13 @@ Use `reelsfarm_prepare_finalize_slideshow` only after every slide is approved. U
 
 ## Confirmation
 
+Apply this section only when the server returns a prepared confirmation.
+
 Show the exact prepared stage, credit estimate, slideshow identifier, slide count, and output type. Get explicit user approval before calling `reelsfarm_confirm_action`. A confirmation for text generation does not approve finalization or video export. Each new prepared confirmation needs separate approval. Do not confirm when a prepare call already executed.
 
 ## Job polling
 
-Poll text generation with `reelsfarm_get_slideshow_text_job_status`. Poll revisions with `reelsfarm_get_slideshow_revision_job_status`. Poll finalization with `reelsfarm_get_slideshow_export_job_status`. Poll MP4 export with `reelsfarm_get_slideshow_video_export_job_status`. Increase the interval after unchanged states and stop at complete, failed, or cancelled.
+Poll text generation with `reelsfarm_get_slideshow_text_job_status`. Poll revisions with `reelsfarm_get_slideshow_revision_job_status`. Poll finalization with `reelsfarm_get_slideshow_export_job_status`. Poll MP4 export with `reelsfarm_get_slideshow_video_export_job_status`. Stop at complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
 
 ## Result integrity
 
