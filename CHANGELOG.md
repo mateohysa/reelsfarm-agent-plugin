@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4 - 2026-09-27
+
+- Match ReelsFarm MCP 3.4.0 and contract `2026-09-27.1`.
+- Guide native Instagram Reel publishing with the `instagramShareToFeed` setting and Reels tab default.
+
 ## 1.0.3 - 2026-09-25
 
 - Updated the composer and listing logo with a white outline for dark-mode visibility.

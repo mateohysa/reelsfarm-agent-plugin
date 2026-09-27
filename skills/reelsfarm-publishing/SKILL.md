@@ -27,6 +27,8 @@ For an authorized action with settled inputs and cost, call the prepare tool wit
 
 Confirm the content, content type, publish format, caption, timezone, exact account, and scheduled time. Use `reelsfarm_validate_caption` for all selected platforms. Then run `reelsfarm_preflight_publishing` with the exact content, publish format, and connection IDs. Read each target’s `settingsSchema`, `rules`, and `limits`. Build each `platforms` entry from that account-specific schema. `ready` checks account and media readiness; it does not mean all required settings are supplied. Missing limits are unknown. Integration targets can expose fewer settings than native connections.
 
+For a native Instagram video target, `instagramShareToFeed: false` keeps the Reel in the Reels tab only. `true` also allows it on the profile grid. New native Reels default to `false`. Send this field only when that account's video `settingsSchema` includes it. Do not send it for integration accounts or photos. `instagramTestReel` is separate. Keep the default `false` when the user does not specify a grid choice.
+
 Resolve every preflight error before preparation. Use `reelsfarm_prepare_schedule_post` for a future time and `reelsfarm_prepare_publish_now` for immediate publishing. Use `dryRun: true` when the user requests a preview or when any destination, caption, time, or platform setting is not final.
 
 ## Confirmation
