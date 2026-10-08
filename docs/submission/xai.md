@@ -16,6 +16,14 @@ Then run the marketplace index generator and catalog validator from that reposit
 
 Do not open the xAI pull request until the maintainer gives separate approval.
 
+## Updates
+
+While the submission is open, replace the `reelsfarm` entry with the output of `npm run xai:entry` for the new release commit. Then regenerate and check the component index again.
+
+After the entry is merged, the xAI daily bump workflow advances the pinned SHA when this repository's default branch moves. This package has no `.grok-plugin/plugin.json` version, so each new commit on `main` can produce a bump pull request for xAI review.
+
+The catalog entry has no `version` field. xAI treats it as display metadata, and the bump workflow changes only the SHA.
+
 ## Reviewer notes
 
 - `.mcp.json` defines one hosted HTTP MCP server.

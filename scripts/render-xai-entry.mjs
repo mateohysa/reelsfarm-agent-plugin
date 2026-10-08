@@ -27,7 +27,6 @@ const entry = {
     'reelsfarm scheduling',
   ],
   domains: ['reelsfarm.com', 'mcp.reelsfarm.com'],
-  version: '1.0.0',
   author: { name: 'ReelsFarm' },
 };
 
