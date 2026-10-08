@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.5 - 2026-10-08
+
+- Match ReelsFarm MCP 3.5.0 and contract `2026-10-07.1` with 110 public tools.
+- Guide Videos workbench generation and polling, including the one-video-job limit.
+- Guide Product and Infographics image templates and the Nano Banana 2.1 model.
+- Guide slideshow effort presets and visual reference aspect ratios.
+- Use video library categories and totals, gallery image categories, and managed Instagram and Facebook accounts.
+
 ## 1.0.4 - 2026-09-27
 
 - Match ReelsFarm MCP 3.4.0 and contract `2026-09-27.1`.

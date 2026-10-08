@@ -1,6 +1,6 @@
 ---
 name: reelsfarm-avatars
-description: Create or revise ReelsFarm AI avatars and save approved images as reusable characters. Use for creator portraits, avatar variants, image-generation conversations, and character-library requests.
+description: Create or revise ReelsFarm AI avatars and infographic template images, and save approved images as reusable characters. Use for creator portraits, avatar variants, infographics, image-generation conversations, and character-library requests.
 ---
 
 # ReelsFarm avatars
@@ -9,7 +9,7 @@ Create or revise an avatar through the hosted ReelsFarm MCP server. Keep the use
 
 ## Tool discovery
 
-Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and stop if paid access is not active. Use `reelsfarm_get_generation_pricing` before paid generation. Use `reelsfarm_list_avatar_templates`, `reelsfarm_list_avatars`, `reelsfarm_list_characters`, and `reelsfarm_list_gallery` to resolve existing inputs. Use `reelsfarm_list_active_image_generation_jobs` when the user asks about unfinished work.
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and stop if paid access is not active. Use `reelsfarm_get_generation_pricing` before paid generation. Use `reelsfarm_list_avatar_templates`, `reelsfarm_list_image_templates`, `reelsfarm_list_avatars`, `reelsfarm_list_characters`, and `reelsfarm_list_gallery` to resolve existing inputs. Use `reelsfarm_list_active_image_generation_jobs` when the user asks about unfinished work.
 
 Never invent an asset identifier or URL. Use only an owned ReelsFarm asset or a public HTTPS source that the selected tool accepts.
 
@@ -26,6 +26,10 @@ For an authorized action with settled inputs and cost, call the prepare tool wit
 ## Preparation
 
 Confirm the intended person, framing, aspect ratio, prompt, model controls, and source image before generation. Use `reelsfarm_prepare_generate_avatar` with `dryRun: true` when the user asks for a preview or when cost or inputs are not settled.
+
+Use `nano-banana-2-1` for Nano Banana 2.1. The legacy `nano-banana-2-pro` key also uses 2.1. Omit quality for Nano Banana models.
+
+For an infographic or another dashboard image template, call `reelsfarm_list_image_templates`. Replace each `[PLACEHOLDER]` in the template prompt with the user's details. Ask for missing details instead of inventing facts, and remove lines you cannot fill. Start the prompt with the template `categoryLine`. When `requiresProduct` is false, call `reelsfarm_prepare_generate_avatar` in reference mode with `sourceImageUrl` set to the template `referenceUrl` and the listed `model`, `aspectRatio`, and `quality`. When `requiresProduct` is true, use the product scene workflow instead. For a people template, use a reference image from `reelsfarm_list_avatar_templates` with the brief and settings in `peopleTemplate`.
 
 For a follow-up image, read the prior turn with `reelsfarm_get_image_generation_conversation`. Preserve both `conversationId` and `parentGenerationId`. Do not silently start a separate conversation.
 
@@ -47,7 +51,7 @@ Poll a returned avatar job with `reelsfarm_get_avatar_job_status`. Use `reelsfar
 
 When the user chooses ReelsFarm, keep generation inside ReelsFarm. Do not use a client-native image generator as a substitute. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Claim that ReelsFarm created an avatar only when the response has `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and a ReelsFarm avatar identifier and URL.
 
-For avatar-to-video requests, complete this avatar workflow first. Pass only the completed `avatar.imageUrl` from `reelsfarm_get_avatar_job_status` to `reelsfarm_prepare_generate_hook`. Then follow the separate video confirmation and polling workflow. Never use `reelsfarm_create_product_upload_sessions` for an avatar or this handoff.
+For avatar-to-video requests, complete this avatar workflow first. Pass only the completed `avatar.imageUrl` from `reelsfarm_get_avatar_job_status` to `reelsfarm_prepare_generate_hook`. Then follow the separate video confirmation and polling workflow. If the user wants an end frame, reference media, or a duration or model that the hook tool does not support, pass that same URL as `firstFrameUrl` to `reelsfarm_prepare_generate_video` and poll `reelsfarm_get_video_generation_status`. Never use `reelsfarm_create_product_upload_sessions` for an avatar or this handoff.
 
 ## Idempotency
 

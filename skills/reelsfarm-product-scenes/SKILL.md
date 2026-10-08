@@ -1,15 +1,15 @@
 ---
 name: reelsfarm-product-scenes
-description: Create ReelsFarm Product Studio scenes from an approved avatar and product image. Use for product placement, product demonstration, lifestyle image, and iterative product-scene requests.
+description: Create ReelsFarm Product Studio scenes and product template images from an approved avatar or template layout and a product image. Use for product placement, product demonstration, product photo template, lifestyle image, and iterative product-scene requests.
 ---
 
 # ReelsFarm product scenes
 
-Create a Product Studio image from an exact avatar and product image. Protect product identity and maintain conversation continuity during revisions.
+Create a Product Studio image from an exact avatar or template layout and a product image. Protect product identity and maintain conversation continuity during revisions.
 
 ## Tool discovery
 
-Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and `reelsfarm_get_generation_pricing`. Resolve owned inputs with `reelsfarm_list_avatars`, `reelsfarm_list_characters`, `reelsfarm_list_assets`, `reelsfarm_search_assets`, and `reelsfarm_list_gallery`. Use `reelsfarm_list_active_image_generation_jobs` to inspect unfinished image work.
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and `reelsfarm_get_generation_pricing`. Resolve owned inputs with `reelsfarm_list_avatars`, `reelsfarm_list_characters`, `reelsfarm_list_assets`, `reelsfarm_search_assets`, and `reelsfarm_list_gallery`. Use `reelsfarm_list_image_templates` with `category: product` for dashboard product photo templates. Use `reelsfarm_list_active_image_generation_jobs` to inspect unfinished image work.
 
 Prefer existing owned product assets. Do not invent a filename, identifier, source image, or public URL.
 
@@ -25,7 +25,9 @@ For an authorized action with settled inputs and cost, call the prepare tool wit
 
 ## Preparation
 
-Confirm the exact avatar, product image, scene instruction, and product handling constraints. Use `reelsfarm_prepare_generate_product_scene`. Use `dryRun: true` when the user wants a preview or when cost and inputs are not settled.
+Confirm the exact avatar or template, product image, scene instruction, and product handling constraints. Use `reelsfarm_prepare_generate_product_scene`. Use `dryRun: true` when the user wants a preview or when cost and inputs are not settled.
+
+For a product template whose `requiresProduct` is true, set `sourceImageUrl` to the template `referenceUrl` and `productImageUrl` to the user's product image. Replace each `[PLACEHOLDER]` in the template prompt with the user's details. Ask for missing details instead of inventing claims, and remove lines you cannot fill. Start the prompt with the template `categoryLine`. With that first line, the source image is a layout reference, and its sample product is replaced with the user's product.
 
 For a revision, use `reelsfarm_get_image_generation_conversation` and preserve `conversationId` and `parentGenerationId` from the selected prior turn.
 

@@ -11,6 +11,8 @@ Create and revise a slideshow as a draft. Keep text generation, draft changes, i
 
 Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`, `reelsfarm_get_generation_pricing`, and `reelsfarm_get_queue_status`. Use `reelsfarm_list_slideshows`, `reelsfarm_get_slideshow`, `reelsfarm_list_product_contexts`, `reelsfarm_list_prompt_templates`, `reelsfarm_list_gallery`, `reelsfarm_list_assets`, `reelsfarm_list_community_collections`, and `reelsfarm_list_community_images` to resolve existing content.
 
+Use `reelsfarm_list_gallery_feed` with `mode: slideshow-picker` and `reelsfarm_get_media_collection_items` to pick owned images as the web slideshow picker does. Set `imageCategory` to `people`, `product`, or `infographics` to narrow generated images, and set `kinds` to return images only. For a large collection, set `limit` and follow `nextCursor` until `hasMore` is false.
+
 Use only authorized ReelsFarm image URLs in slideshow slides. Do not invent assets or silently change slide order.
 
 ## ChatGPT follow-ups
@@ -28,6 +30,8 @@ For an authorized action with settled inputs and cost, call the prepare tool wit
 Confirm the slideshow type, slide count, product context, text brief, visual source, title, and output format.
 
 Use `reelsfarm_prepare_generate_slideshow_text` for new text. Use `reelsfarm_prepare_revise_slideshow_text` for a conversational revision. After approved text is ready, use `reelsfarm_create_slideshow` for a new draft or `reelsfarm_update_slideshow` for an existing draft.
+
+Both text tools accept the dashboard `effort` presets: `light`, `low`, `medium`, `high`, and `extra_high`. Higher effort uses more visual references (0, 2, 5, 10, or 20) and more model time. `extra_high` also reviews the rendered text layout. Visual references require `maxMode: true`. Without `effort`, send up to five references; with it, up to 20. Give each reference the slide `aspectRatio`, because layout checks assume 1:1 when it is missing. Use the effort the user asks for. The dashboard defaults to `extra_high`; a lower effort returns text faster.
 
 Use `reelsfarm_prepare_finalize_slideshow` only after every slide is approved. Use `reelsfarm_prepare_export_slideshow_video` only when the user asks for an MP4 export. Use `dryRun: true` when cost, inputs, or final output are not settled.
 

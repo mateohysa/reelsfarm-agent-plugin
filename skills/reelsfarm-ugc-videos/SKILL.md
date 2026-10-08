@@ -1,17 +1,17 @@
 ---
 name: reelsfarm-ugc-videos
-description: Assemble ReelsFarm UGC videos from saved hooks, demos, ordered clips, music, captions, and generated hook assets. Use for short-form video drafts and approved generation requests.
+description: Assemble ReelsFarm UGC videos from saved hooks, demos, ordered clips, music, and captions, or generate videos in the ReelsFarm Videos workbench from a prompt, frames, or reference media. Use for short-form video drafts, text-to-video, and approved generation requests.
 ---
 
 # ReelsFarm UGC videos
 
-Build a user-generated content (UGC) video from exact ReelsFarm assets. Preserve clip order and make paid generation visible before execution.
+Build a user-generated content (UGC) video from exact ReelsFarm assets, or generate a new clip in the Videos workbench. Preserve clip order and make paid generation visible before execution.
 
 ## Tool discovery
 
 Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`, `reelsfarm_get_generation_pricing`, and `reelsfarm_get_queue_status`. Resolve assets with `reelsfarm_list_template_hooks`, `reelsfarm_list_generated_hooks`, `reelsfarm_list_assets`, `reelsfarm_search_assets`, `reelsfarm_list_music_tracks`, `reelsfarm_list_drafts`, and `reelsfarm_list_videos`.
 
-Use exact returned identifiers and URLs. Never infer an asset from a similar name when more than one match exists.
+Use exact returned identifiers and URLs. Never infer an asset from a similar name when more than one match exists. `reelsfarm_list_videos` accepts a library `category` of `people`, `product`, or `scenes` and returns `totalCount`. Use `totalCount` to report how many videos the user has.
 
 ## ChatGPT follow-ups
 
@@ -31,6 +31,14 @@ Use `reelsfarm_prepare_generate_ugc_video` for generation. Set `dryRun: true` wh
 
 For a generated hook, use `reelsfarm_prepare_generate_hook`. Treat it as a separate paid action under the effective connection mode before it becomes a video input. If the avatar was just generated, use only the `avatar.imageUrl` returned by a completed `reelsfarm_get_avatar_job_status` response. Do not use a client-native image or a product upload session.
 
+## Videos workbench
+
+Use `reelsfarm_prepare_generate_video` for text-to-video, a start frame with an optional end frame, or up to three reference images. Seedance models also accept one reference video and one reference audio file; an audio reference also needs an image or video reference. Do not combine frames with reference media. Use only owned ReelsFarm asset URLs for frames and references.
+
+The models are `seedance-2.5` (default), `seedance-2`, `seedance-2-fast`, `veo-3.1`, `veo-3.1-fast`, and `gemini-omni-1.1-flash`. Read `videoGeneration` from `reelsfarm_get_generation_pricing` and choose a duration, aspect ratio, and resolution that the model supports. `gemini-omni-1.1-flash` always includes audio, so set `includeAudio: true`. Confirm the prompt, model, duration, aspect ratio, audio, library `category`, and any target `collectionId` before the paid action. Use `dryRun: true` for a preview or unsettled inputs.
+
+One video job runs at a time per account across hooks, AI Clone, and the Videos workbench. If a request fails with `VIDEO_JOB_IN_PROGRESS`, the message names the active job and its status tool. Poll that job until it ends. Then prepare the video again with a new `idempotencyKey`. Do not start a replacement while the active job is running.
+
 ## Confirmation
 
 Apply this section only when the server returns a prepared confirmation.
@@ -39,11 +47,11 @@ Show the prepared action, credit estimate, output quality, caption, and ordered 
 
 ## Job polling
 
-Poll UGC video generation with `reelsfarm_get_video_job_status`. Poll generated hooks with `reelsfarm_get_generated_hook_status`. Stop polling at complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
+Poll UGC video generation with `reelsfarm_get_video_job_status`. Poll generated hooks with `reelsfarm_get_generated_hook_status`. Poll Videos workbench jobs with `reelsfarm_get_video_generation_status`. Stop polling at complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
 
 ## Result integrity
 
-When the user chooses ReelsFarm, use ReelsFarm generation tools only. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Claim that ReelsFarm created a video only when the response has `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and a ReelsFarm video or hook URL. Never present a preparation, confirmation, native client asset, or failed handoff as a ReelsFarm video.
+When the user chooses ReelsFarm, use ReelsFarm generation tools only. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Claim that ReelsFarm created a video only when the response has `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and a ReelsFarm video or hook URL. A completed Videos workbench job returns the library video in `video`; publishing uses its `video.id` with `contentType: UGC_VIDEO`. Never present a preparation, confirmation, native client asset, or failed handoff as a ReelsFarm video.
 
 ## Idempotency
 

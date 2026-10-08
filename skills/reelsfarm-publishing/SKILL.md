@@ -9,9 +9,11 @@ Publish only approved content to an exact connected account. Always perform acco
 
 ## Tool discovery
 
-Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`. Use `reelsfarm_list_connected_accounts` and `reelsfarm_list_social_accounts` to find eligible destinations. Use `reelsfarm_list_videos`, `reelsfarm_list_slideshows`, and `reelsfarm_list_gallery` to resolve the exact content. Use `reelsfarm_list_scheduled_posts` and `reelsfarm_get_publish_status` to inspect existing publishing work.
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`. Use `reelsfarm_list_connected_accounts` and `reelsfarm_list_social_accounts` to find eligible destinations. Use `reelsfarm_list_videos`, `reelsfarm_list_slideshows`, and `reelsfarm_list_gallery` to resolve the exact content. `reelsfarm_list_videos` accepts a library `category` and returns `totalCount`. A Videos workbench result is a library video; publish it with `contentType: UGC_VIDEO` and the `video.id` from `reelsfarm_get_video_generation_status`. Use `reelsfarm_list_scheduled_posts` and `reelsfarm_get_publish_status` to inspect existing publishing work.
 
 Never choose an account from a platform name alone when more than one eligible account exists. Ask the user to select the exact account. Social account linking and credential changes remain dashboard-only.
+
+An account with `managed: true` was connected by ReelsFarm through its managed Instagram or Facebook integration. Publish to it like any other integration account, and follow its preflight `settingsSchema`.
 
 ## ChatGPT follow-ups
 

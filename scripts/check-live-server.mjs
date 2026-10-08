@@ -35,7 +35,7 @@ const cardResponse = await fetchChecked(cardUrl);
 assert.ok(cardResponse.ok, `${cardUrl} returned HTTP ${cardResponse.status}`);
 const card = await cardResponse.json();
 assert.equal(card.serverInfo?.title, 'ReelsFarm');
-assert.equal(card.tools?.length, 107, 'The live public catalog must contain 107 tools');
+assert.equal(card.tools?.length, 110, 'The live public catalog must contain 110 tools');
 
 const names = new Set();
 for (const tool of card.tools) {
