@@ -33,6 +33,12 @@ For a native Instagram video target, `instagramShareToFeed: false` keeps the Ree
 
 Resolve every preflight error before preparation. Use `reelsfarm_prepare_schedule_post` for a future time and `reelsfarm_prepare_publish_now` for immediate publishing. Use `dryRun: true` when the user requests a preview or when any destination, caption, time, or platform setting is not final.
 
+## Editing a scheduled post
+
+Use `reelsfarm_prepare_update_scheduled_post` to change a `SCHEDULED` post before it publishes: `scheduledFor`, `timezone`, `caption`, and the settings of its existing destinations through `platforms`. Read the current values from `reelsfarm_list_scheduled_posts`, where each platform row has `accountId` and `settings`. Name each destination by `platform` and `connectionId` (its `accountId`) and send only the fields that change. Omitted fields keep their saved values. The content and destination accounts cannot change; to change them, cancel the post and schedule it again.
+
+A new `caption` also removes the `captionOverride` of every destination that the same request does not set. An empty `captionOverride` removes one. Switching TikTok from `DRAFT` to `DIRECT` needs `tiktokPrivacyLevel` and, for video, `tiktokIsAigc`. When delivery settings change, run `reelsfarm_preflight_publishing` for those accounts first and build the change from their `settingsSchema`. Follow the confirmation section below. The edit fails once the post has started publishing; report that instead of retrying.
+
 ## Confirmation
 
 Apply this section only when the server returns a prepared confirmation.

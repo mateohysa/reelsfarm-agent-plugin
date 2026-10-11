@@ -18,7 +18,7 @@ The package includes five guided workflows:
 
 The client opens the ReelsFarm OAuth flow when you connect. Do not add API keys, headers, or local environment settings to the included MCP files.
 
-Targets ReelsFarm MCP 3.5.0, contract `2026-10-07.1`, with 110 public tools.
+Targets ReelsFarm MCP 3.6.0, contract `2026-10-11.1`, with 110 public tools.
 
 New OAuth connections begin in Review mode. The skills require clear user approval before they call `reelsfarm_confirm_action`. Creator can execute authorized content work immediately. Autopilot can also schedule and publish. The skills read the effective mode and do not confirm an action that already executed.
 

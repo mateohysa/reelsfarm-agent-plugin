@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6 - 2026-10-11
+
+- Match ReelsFarm MCP 3.6.0 and contract `2026-10-11.1`; the 110 public tools are unchanged.
+- Guide editing a scheduled post before it publishes: time, caption, and the settings of its existing destinations through `platforms`, read from the `settings` returned by `reelsfarm_list_scheduled_posts`.
+
 ## 1.0.5 - 2026-10-08
 
 - Match ReelsFarm MCP 3.5.0 and contract `2026-10-07.1` with 110 public tools.
