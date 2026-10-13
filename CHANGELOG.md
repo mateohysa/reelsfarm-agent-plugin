@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8 - 2026-10-13
+
+- Use the rounded ReelsFarm logo from the ChatGPT listing as the Claude plugin icon.
+
 ## 1.0.7 - 2026-10-13
 
 - Match ReelsFarm MCP 3.8.1 and contract `2026-10-13.2` with 154 public tools.

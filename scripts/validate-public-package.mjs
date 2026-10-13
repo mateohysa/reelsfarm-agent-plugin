@@ -94,13 +94,17 @@ function findForbiddenText(source, relative) {
   }
 }
 
+// The Claude icon is the same 500 px rounded logo as the ChatGPT listing and the MCP server icon.
+const minimumImageSize = (relative) => (relative === 'claude/icon.png' ? 500 : 512);
+
 function validatePng(bytes, relative) {
   const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
   assert.ok(bytes.subarray(0, 8).equals(pngSignature), `${relative} must be a PNG file`);
   assert.ok(bytes.length <= 8_000_000, `${relative} must be 8 MB or smaller`);
   const width = bytes.readUInt32BE(16);
   const height = bytes.readUInt32BE(20);
-  assert.ok(width >= 512 && height >= 512, `${relative} must be at least 512 by 512 pixels`);
+  const minimum = minimumImageSize(relative);
+  assert.ok(width >= minimum && height >= minimum, `${relative} must be at least ${minimum} by ${minimum} pixels`);
 }
 
 const files = await walk(root);
@@ -131,7 +135,7 @@ const plugin = JSON.parse(await fs.readFile(path.join(root, 'plugin.json'), 'utf
 const portableMcp = JSON.parse(await fs.readFile(path.join(root, 'mcp.json'), 'utf8'));
 const vendorMcp = JSON.parse(await fs.readFile(path.join(root, '.mcp.json'), 'utf8'));
 assert.equal(plugin.name, 'reelsfarm');
-assert.equal(plugin.version, '1.0.7');
+assert.equal(plugin.version, '1.0.8');
 assert.equal(plugin.license, 'MIT');
 assert.deepEqual(plugin.extensions?.['com.openai']?.interface?.capabilities, ['Read', 'Write']);
 assert.equal(plugin.extensions?.['com.openai']?.interface?.category, 'Productivity');
