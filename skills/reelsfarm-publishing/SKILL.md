@@ -43,7 +43,7 @@ A new `caption` also removes the `captionOverride` of every destination that the
 
 Apply this section only when the server returns a prepared confirmation.
 
-Show the exact content, account labels, platforms, caption, timezone, and final scheduled time or immediate action. Get explicit user approval before calling `reelsfarm_confirm_action`. Do not treat approval of the content itself as approval to publish. Do not confirm if preflight is stale or if the prepare call already executed.
+Show the exact content, account labels, platforms, caption, timezone, and final scheduled time or immediate action. Get explicit user approval before calling the operation-specific confirmation tool named in the prepared result's `confirmationTool` field. Do not treat approval of the content itself as approval to publish. Do not confirm if preflight is stale or if the prepare call already executed.
 
 ## Job polling
 

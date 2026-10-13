@@ -16,7 +16,18 @@ const expectedBinaryFiles = new Set([
   'assets/product-studio.png',
   'assets/slideshows.png',
   'assets/ugc-videos.png',
+  'claude/icon.png',
 ]);
+// Claude installs only the claude/ folder, so it carries its own copy of the skills.
+const expectedClaudeFiles = [
+  '.claude-plugin/plugin.json',
+  '.mcp.json',
+  'LICENSE',
+  'README.md',
+  'icon.png',
+  ...expectedSkills.map((skill) => `skills/${skill}/SKILL.md`),
+].map((file) => `claude/${file}`);
+const directoryEndpoint = 'https://mcp.reelsfarm.com/plugin/mcp';
 const ignoredDirectories = new Set(['.git', 'node_modules']);
 const errors = [];
 
@@ -112,7 +123,7 @@ for (const file of files) {
 
 assert.deepEqual(
   [...fileNames].filter((file) => file.startsWith('assets/')).sort(),
-  [...expectedBinaryFiles].sort(),
+  [...expectedBinaryFiles].filter((file) => file.startsWith('assets/')).sort(),
   'Only the reviewed public PNG assets may be present',
 );
 
@@ -120,7 +131,7 @@ const plugin = JSON.parse(await fs.readFile(path.join(root, 'plugin.json'), 'utf
 const portableMcp = JSON.parse(await fs.readFile(path.join(root, 'mcp.json'), 'utf8'));
 const vendorMcp = JSON.parse(await fs.readFile(path.join(root, '.mcp.json'), 'utf8'));
 assert.equal(plugin.name, 'reelsfarm');
-assert.equal(plugin.version, '1.0.6');
+assert.equal(plugin.version, '1.0.7');
 assert.equal(plugin.license, 'MIT');
 assert.deepEqual(plugin.extensions?.['com.openai']?.interface?.capabilities, ['Read', 'Write']);
 assert.equal(plugin.extensions?.['com.openai']?.interface?.category, 'Productivity');
@@ -164,6 +175,8 @@ for (const skill of expectedSkills) {
   const frontmatter = readFrontmatter(source, relative);
   assert.equal(frontmatter.name, skill, `${relative} name must match its directory`);
   assert.ok(frontmatter.description.length >= 40, `${relative} needs a useful trigger description`);
+  assert.ok(!source.includes('reelsfarm_confirm_action'), `${relative} must use the operation-specific confirmationTool`);
+  assert.ok(!/reelsfarm_[a-z_]*hook_(?:clip|import)/.test(source), `${relative} must not use tools missing from the directory endpoint`);
   for (const required of [
     'Tool discovery',
     'Connection mode',
@@ -171,7 +184,7 @@ for (const skill of expectedSkills) {
     'Autopilot',
     'dryRun: true',
     'explicit user approval',
-    'reelsfarm_confirm_action',
+    'confirmationTool',
     'idempotencyKey',
     'reelsfarm_get_operation',
     'Safe stopping',
@@ -192,8 +205,28 @@ for (const source of [avatarSkill, videoSkill]) {
 assert.ok(avatarSkill.includes('reelsfarm_prepare_generate_hook'), 'Avatar skill must define the avatar-to-video handoff');
 assert.ok(avatarSkill.includes('Never use `reelsfarm_create_product_upload_sessions`'), 'Avatar skill must reject product uploads for avatar handoff');
 
+const claudePlugin = JSON.parse(await fs.readFile(path.join(root, 'claude', '.claude-plugin', 'plugin.json'), 'utf8'));
+const claudeMcp = JSON.parse(await fs.readFile(path.join(root, 'claude', '.mcp.json'), 'utf8'));
+assert.deepEqual(
+  [...fileNames].filter((file) => file.startsWith('claude/')).sort(),
+  [...expectedClaudeFiles].sort(),
+  'The Claude plugin folder must contain only its manifest, MCP config, README, license, icon, and skills',
+);
+assert.equal(claudePlugin.name, plugin.name);
+assert.equal(claudePlugin.version, plugin.version);
+assert.equal(claudePlugin.license, plugin.license);
+assert.equal(claudePlugin.icon, './icon.png');
+assert.deepEqual(claudeMcp, { mcpServers: { reelsfarm: { type: 'http', url: directoryEndpoint } } });
+for (const file of ['LICENSE', ...expectedSkills.map((skill) => `skills/${skill}/SKILL.md`)]) {
+  const [shared, copy] = await Promise.all([
+    fs.readFile(path.join(root, file), 'utf8'),
+    fs.readFile(path.join(root, 'claude', file), 'utf8'),
+  ]);
+  assert.equal(copy, shared, `claude/${file} must match ${file}`);
+}
+
 if (errors.length > 0) {
   throw new Error(`Public package security audit failed:\n${errors.map((error) => `- ${error}`).join('\n')}`);
 }
 
-console.log(`Validated ${files.length} public files, ${expectedSkills.length} skills, two MCP configs, and ${expectedBinaryFiles.size} reviewed assets.`);
+console.log(`Validated ${files.length} public files, ${expectedSkills.length} skills, three MCP configs, the Claude plugin folder, and ${expectedBinaryFiles.size} reviewed assets.`);

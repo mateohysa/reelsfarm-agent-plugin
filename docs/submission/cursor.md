@@ -21,7 +21,7 @@ Commercial access: An active ReelsFarm plan or eligible trial is required.
 - The package has five skills.
 - No local process, headers, credentials, or environment values are required.
 - New connections begin in Review mode.
-- Every skill requires explicit user approval before `reelsfarm_confirm_action`.
+- Every skill requires explicit user approval before the confirmation tool named in `confirmationTool`.
 
 ## Local check
 

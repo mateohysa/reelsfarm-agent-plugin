@@ -18,9 +18,9 @@ The package includes five guided workflows:
 
 The client opens the ReelsFarm OAuth flow when you connect. Do not add API keys, headers, or local environment settings to the included MCP files.
 
-Targets ReelsFarm MCP 3.6.0, contract `2026-10-11.1`, with 110 public tools.
+Targets ReelsFarm MCP 3.8.1, contract `2026-10-13.2`, with 154 public tools.
 
-New OAuth connections begin in Review mode. The skills require clear user approval before they call `reelsfarm_confirm_action`. Creator can execute authorized content work immediately. Autopilot can also schedule and publish. The skills read the effective mode and do not confirm an action that already executed.
+New OAuth connections begin in Review mode. The skills require clear user approval before they call the confirmation tool named in the prepared result's `confirmationTool` field. Creator can execute authorized content work immediately. Autopilot can also schedule and publish. The skills read the effective mode and do not confirm an action that already executed.
 
 Publishing workflows use the account-specific preflight settings schema, rules, and known limits. Native Instagram video targets can set `instagramShareToFeed` to control whether a Reel can also appear on the profile grid. New native Reels default to Reels tab only. Generation and export workflows use bounded job waits and recorded progress.
 
@@ -30,13 +30,17 @@ Video workflows also use the Videos workbench for text-to-video, start and end f
 
 ## Install
 
+### Claude
+
+The `claude/` folder is the Claude plugin, listed in Anthropic's directory. It holds a copy of the five skills and connects to the directory endpoint `https://mcp.reelsfarm.com/plugin/mcp`, which has a smaller tool set than the universal endpoint. To load it locally in Claude Code, run `claude --plugin-dir ./claude`.
+
 ### Cursor
 
 Use the Cursor marketplace after the listing is approved. For local review, copy this repository to `~/.cursor/plugins/local/reelsfarm`, then reload Cursor.
 
 ### OpenAI
 
-Use the OpenAI plugin submission flow with the universal MCP endpoint `https://mcp.reelsfarm.com/mcp`. The package uses the portable Agent Plugins manifest and includes OpenAI listing metadata.
+The OpenAI directory listing uses the directory endpoint `https://mcp.reelsfarm.com/plugin/mcp`. The package uses the portable Agent Plugins manifest and includes OpenAI listing metadata.
 
 ### xAI
 
@@ -55,7 +59,7 @@ npm test
 npm run validate:live
 ```
 
-The local validator checks the manifests, skill structure, asset references, vendor MCP parity, and public security boundary. The live check verifies public URLs, tool schemas, annotations, skill tool names, and the unauthenticated OAuth challenge.
+The local validator checks the manifests, skill structure, asset references, vendor MCP parity, the Claude plugin folder and its skill copies, and public security boundary. To check the Claude plugin with Claude Code, run `claude plugin validate ./claude --strict`. The live check verifies public URLs, tool schemas, annotations, skill tool names, and the unauthenticated OAuth challenge.
 
 ## Support and security
 

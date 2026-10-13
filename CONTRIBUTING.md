@@ -15,6 +15,6 @@ This repository is a thin public package. Do not add the hosted server implement
 5. Run `npm test` and `npm run validate:live`.
 6. Review every changed file before opening a pull request.
 
-All mutation workflows must use stable idempotency keys. They must require explicit user approval before `reelsfarm_confirm_action`.
+All mutation workflows must use stable idempotency keys. They must require explicit user approval before the confirmation tool named in the prepared result's `confirmationTool` field.
 
 Use GitHub Issues for normal support. Do not put security details or sensitive data in an issue.

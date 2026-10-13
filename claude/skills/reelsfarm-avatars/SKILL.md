@@ -1,0 +1,66 @@
+---
+name: reelsfarm-avatars
+description: Create or revise ReelsFarm AI avatars and infographic template images, and save approved images as reusable characters. Use for creator portraits, avatar variants, infographics, image-generation conversations, and character-library requests.
+---
+
+# ReelsFarm avatars
+
+Create or revise an avatar through the hosted ReelsFarm MCP server. Keep the user informed about cost, source images, and the image-generation conversation.
+
+## Tool discovery
+
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and stop if paid access is not active. Use `reelsfarm_get_generation_pricing` before paid generation. Use `reelsfarm_list_avatar_templates`, `reelsfarm_list_image_templates`, `reelsfarm_list_avatars`, `reelsfarm_list_characters`, and `reelsfarm_list_gallery` to resolve existing inputs. Use `reelsfarm_list_active_image_generation_jobs` when the user asks about unfinished work.
+
+Never invent an asset identifier or URL. Use only an owned ReelsFarm asset or a public HTTPS source that the selected tool accepts.
+
+## ChatGPT follow-ups
+
+In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
+
+## Connection mode
+
+Read the effective mode from `reelsfarm_get_account` before any mutation. Review returns a prepared confirmation. Creator can execute allowed content work immediately but blocks publishing and automation activation. Autopilot can also execute publishing and automation work within the granted scope and server limits. Use only the actions the user requested. Never change the connection mode to bypass a restriction.
+
+For an authorized action with settled inputs and cost, call the prepare tool with one stable `idempotencyKey`. A prepare tool can execute immediately in Creator or Autopilot. If the response contains a `confirmationId`, follow the confirmation section below. If it already executed, continue with its operation or job. Do not request another approval merely because the tool name starts with prepare. Use `dryRun: true` for previews or unresolved inputs.
+
+## Preparation
+
+Confirm the intended person, framing, aspect ratio, prompt, model controls, and source image before generation. Use `reelsfarm_prepare_generate_avatar` with `dryRun: true` when the user asks for a preview or when cost or inputs are not settled.
+
+Use `nano-banana-2-1` for Nano Banana 2.1. The legacy `nano-banana-2-pro` key also uses 2.1. Omit quality for Nano Banana models.
+
+For an infographic or another dashboard image template, call `reelsfarm_list_image_templates`. Replace each `[PLACEHOLDER]` in the template prompt with the user's details. Ask for missing details instead of inventing facts, and remove lines you cannot fill. Start the prompt with the template `categoryLine`. When `requiresProduct` is false, call `reelsfarm_prepare_generate_avatar` in reference mode with `sourceImageUrl` set to the template `referenceUrl` and the listed `model`, `aspectRatio`, and `quality`. When `requiresProduct` is true, use the product scene workflow instead. For a people template, use a reference image from `reelsfarm_list_avatar_templates` with the brief and settings in `peopleTemplate`.
+
+For a follow-up image, read the prior turn with `reelsfarm_get_image_generation_conversation`. Preserve both `conversationId` and `parentGenerationId`. Do not silently start a separate conversation.
+
+To save a generated avatar as a character, use `reelsfarm_prepare_save_character` only after the user selects the exact avatar and name. Pass the avatar `imageUrl` from `reelsfarm_list_avatars` or a completed `reelsfarm_get_avatar_job_status` result.
+
+## Confirmation
+
+Apply this section only when the server returns a prepared confirmation.
+
+Show the prepared action, credit estimate, source image, and expected result. Get explicit user approval before calling the operation-specific confirmation tool named in the prepared result's `confirmationTool` field. Never treat the original creation request as approval of a later prepared confirmation.
+
+If the prepare call already executed under the connection policy, do not call the confirmation tool again.
+
+## Job polling
+
+Poll a returned avatar job with `reelsfarm_get_avatar_job_status`. Use `reelsfarm_get_image_generation_job_status` when conversation details or a normalized result are needed. Stop polling when the job is complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
+
+## Result integrity and handoff
+
+When the user chooses ReelsFarm, keep generation inside ReelsFarm. Do not use a client-native image generator as a substitute. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Claim that ReelsFarm created an avatar only when the response has `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and a ReelsFarm avatar identifier and URL.
+
+For avatar-to-video requests, complete this avatar workflow first. Pass only the completed `avatar.imageUrl` from `reelsfarm_get_avatar_job_status` to `reelsfarm_prepare_generate_hook`. Then follow the separate video confirmation and polling workflow. If the user wants an end frame, reference media, or a duration or model that the hook tool does not support, pass that same URL as `firstFrameUrl` to `reelsfarm_prepare_generate_video` and poll `reelsfarm_get_video_generation_status`. Never use `reelsfarm_create_product_upload_sessions` for an avatar or this handoff.
+
+## Idempotency
+
+Create one stable `idempotencyKey` for each logical prepare or mutation request. Reuse the same key after a timeout, connection error, or uncertain response. Use a new key only when the user changes the requested result.
+
+## Error recovery
+
+If a mutation response is ambiguous and includes an operation identifier, call `reelsfarm_get_operation`. Do not prepare or confirm the same action again until its durable state is known. For an expired confirmation, prepare again with the same intended inputs and ask for approval again. Show safe error text and any trace identifier without guessing the cause.
+
+## Safe stopping
+
+Stop when paid access is inactive, credits are insufficient, the source image is not authorized, the intended person is unclear, or the user does not approve the prepared action. Do not delete images, disconnect accounts, change billing, or perform dashboard-only account work.

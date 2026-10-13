@@ -22,7 +22,7 @@ Privacy: `https://reelsfarm.com/privacy`
 
 Terms: `https://reelsfarm.com/terms`
 
-Universal MCP URL: `https://mcp.reelsfarm.com/mcp`
+Directory MCP URL: `https://mcp.reelsfarm.com/plugin/mcp`
 
 Release notes: First public release. It includes five guided content workflows, OAuth access to the hosted ReelsFarm MCP server, and explicit review before confirmed actions.
 
@@ -48,13 +48,13 @@ The final domain verification value is supplied by the OpenAI submission portal.
 
 Prompt: Using ReelsFarm, create two candid vertical AI avatars: a male and female university student taking selfies in a library. Prepare them for my review.
 
-Expected: The plugin checks the account and generation price, calls `reelsfarm_prepare_batch_generate_avatars`, and presents any required approval. After approval, it calls `reelsfarm_confirm_action` when needed and polls `reelsfarm_get_avatar_job_status`. It reports two ReelsFarm avatar identifiers and URLs only after both jobs complete.
+Expected: The plugin checks the account and generation price, calls `reelsfarm_prepare_batch_generate_avatars`, and presents any required approval. After approval, it calls `reelsfarm_confirm_batch_generate_avatars` when needed and polls `reelsfarm_get_avatar_job_status`. It reports two ReelsFarm avatar identifiers and URLs only after both jobs complete.
 
 ### 2. Prepare a product scene without generating it
 
 Prompt: Using ReelsFarm, prepare a dry-run product scene with my newest avatar and saved image product in a university desk setting. Show the cost, but do not generate it.
 
-Expected: The plugin resolves the owned avatar and image product, checks pricing, and calls `reelsfarm_prepare_generate_product_scene` with `dryRun: true`. It returns the planned inputs and estimate. It does not call `reelsfarm_confirm_action` and creates no scene.
+Expected: The plugin resolves the owned avatar and image product, checks pricing, and calls `reelsfarm_prepare_generate_product_scene` with `dryRun: true`. It returns the planned inputs and estimate. It does not call `reelsfarm_confirm_generate_product_scene` and creates no scene.
 
 ### 3. Animate a completed avatar with Seedance
 
@@ -102,7 +102,7 @@ Prompt 2 after preparation: Confirmed.
 
 Prompt 3 after avatar completion: Select or `@mention` ReelsFarm again, then ask: Animate that ReelsFarm avatar as a four-second Seedance hook with a slow camera pan and a natural smile.
 
-Expected: The plugin calls `reelsfarm_prepare_generate_avatar`, waits for approval, calls `reelsfarm_confirm_action`, and polls `reelsfarm_get_avatar_job_status`. It uses the completed ReelsFarm `avatar.imageUrl` with `reelsfarm_prepare_generate_hook`, waits for a separate approval, confirms, and polls `reelsfarm_get_generated_hook_status`. It does not use native image generation, `reelsfarm_create_product_upload_sessions`, or `reelsfarm_prepare_ai_clone_job`. It does not claim either asset exists before `executionState: COMPLETED` and `assetCreated: true`.
+Expected: The plugin calls `reelsfarm_prepare_generate_avatar`, waits for approval, calls `reelsfarm_confirm_generate_avatar`, and polls `reelsfarm_get_avatar_job_status`. It uses the completed ReelsFarm `avatar.imageUrl` with `reelsfarm_prepare_generate_hook`, waits for a separate approval, confirms, and polls `reelsfarm_get_generated_hook_status`. It does not use native image generation, `reelsfarm_create_product_upload_sessions`, or `reelsfarm_prepare_ai_clone_job`. It does not claim either asset exists before `executionState: COMPLETED` and `assetCreated: true`.
 
 ## Final portal checklist
 

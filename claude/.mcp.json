@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "reelsfarm": {
+      "type": "http",
+      "url": "https://mcp.reelsfarm.com/plugin/mcp"
+    }
+  }
+}

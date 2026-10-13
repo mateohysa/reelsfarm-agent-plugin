@@ -43,7 +43,7 @@ One video job runs at a time per account across hooks, AI Clone, and the Videos 
 
 Apply this section only when the server returns a prepared confirmation.
 
-Show the prepared action, credit estimate, output quality, caption, and ordered media list. Get explicit user approval before calling `reelsfarm_confirm_action`. A request to edit or preview a draft is not approval to spend credits. Do not confirm again when the prepare call already executed.
+Show the prepared action, credit estimate, output quality, caption, and ordered media list. Get explicit user approval before calling the operation-specific confirmation tool named in the prepared result's `confirmationTool` field. A request to edit or preview a draft is not approval to spend credits. Do not confirm again when the prepare call already executed.
 
 ## Job polling
 

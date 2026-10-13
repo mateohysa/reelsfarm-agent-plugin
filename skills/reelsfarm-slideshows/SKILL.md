@@ -39,7 +39,7 @@ Use `reelsfarm_prepare_finalize_slideshow` only after every slide is approved. U
 
 Apply this section only when the server returns a prepared confirmation.
 
-Show the exact prepared stage, credit estimate, slideshow identifier, slide count, and output type. Get explicit user approval before calling `reelsfarm_confirm_action`. A confirmation for text generation does not approve finalization or video export. Each new prepared confirmation needs separate approval. Do not confirm when a prepare call already executed.
+Show the exact prepared stage, credit estimate, slideshow identifier, slide count, and output type. Get explicit user approval before calling the operation-specific confirmation tool named in the prepared result's `confirmationTool` field. A confirmation for text generation does not approve finalization or video export. Each new prepared confirmation needs separate approval. Do not confirm when a prepare call already executed.
 
 ## Job polling
 

@@ -37,7 +37,7 @@ If no product asset exists, use `reelsfarm_create_product_upload_sessions` only 
 
 Apply this section only when the server returns a prepared confirmation.
 
-Show the prepared action, credit estimate, selected avatar, selected product, and scene instruction. Get explicit user approval before calling `reelsfarm_confirm_action`. If the action already executed under the connection policy, do not confirm it again.
+Show the prepared action, credit estimate, selected avatar, selected product, and scene instruction. Get explicit user approval before calling the operation-specific confirmation tool named in the prepared result's `confirmationTool` field. If the action already executed under the connection policy, do not confirm it again.
 
 ## Job polling
 

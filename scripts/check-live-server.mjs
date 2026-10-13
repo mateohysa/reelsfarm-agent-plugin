@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const endpoint = 'https://mcp.reelsfarm.com/mcp';
+const directoryEndpoint = 'https://mcp.reelsfarm.com/plugin/mcp';
 const cardUrl = 'https://mcp.reelsfarm.com/.well-known/mcp/server-card.json';
 const publicUrls = [
   'https://reelsfarm.com/mcp',
@@ -35,7 +36,7 @@ const cardResponse = await fetchChecked(cardUrl);
 assert.ok(cardResponse.ok, `${cardUrl} returned HTTP ${cardResponse.status}`);
 const card = await cardResponse.json();
 assert.equal(card.serverInfo?.title, 'ReelsFarm');
-assert.equal(card.tools?.length, 110, 'The live public catalog must contain 110 tools');
+assert.equal(card.tools?.length, 154, 'The live public catalog must contain 154 tools');
 
 const names = new Set();
 for (const tool of card.tools) {
@@ -67,29 +68,38 @@ for (const toolName of referencedTools) {
   assert.ok(names.has(toolName), `A skill references missing live tool ${toolName}`);
 }
 
-const challengeResponse = await fetchChecked(endpoint, {
-  method: 'POST',
-  headers: {
-    accept: 'application/json, text/event-stream',
-    'content-type': 'application/json',
-    'mcp-protocol-version': '2025-06-18',
-  },
-  body: JSON.stringify({
-    jsonrpc: '2.0',
-    id: 1,
-    method: 'initialize',
-    params: {
-      protocolVersion: '2025-06-18',
-      capabilities: {},
-      clientInfo: { name: 'reelsfarm-public-audit', version: '1.0.0' },
+// Each endpoint challenges with the metadata of its own OAuth resource.
+for (const [url, metadataUrl] of [
+  [endpoint, 'https://mcp.reelsfarm.com/.well-known/oauth-protected-resource'],
+  [directoryEndpoint, 'https://mcp.reelsfarm.com/.well-known/oauth-protected-resource/plugin/mcp'],
+]) {
+  const challengeResponse = await fetchChecked(url, {
+    method: 'POST',
+    headers: {
+      accept: 'application/json, text/event-stream',
+      'content-type': 'application/json',
+      'mcp-protocol-version': '2025-06-18',
     },
-  }),
-});
-assert.equal(challengeResponse.status, 401, 'An unauthenticated MCP request must return HTTP 401');
-const authenticate = challengeResponse.headers.get('www-authenticate') || '';
-assert.match(authenticate, /^Bearer /);
-assert.match(authenticate, /resource_metadata="https:\/\/mcp\.reelsfarm\.com\/\.well-known\/oauth-protected-resource"/);
-const challengeBody = await challengeResponse.text();
-assert.ok(!/(?:stack|private key|database|access[_-]?token|client[_-]?secret)/i.test(challengeBody), 'The OAuth challenge body exposed private details');
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'initialize',
+      params: {
+        protocolVersion: '2025-06-18',
+        capabilities: {},
+        clientInfo: { name: 'reelsfarm-public-audit', version: '1.0.0' },
+      },
+    }),
+  });
+  assert.equal(challengeResponse.status, 401, `An unauthenticated request to ${url} must return HTTP 401`);
+  const authenticate = challengeResponse.headers.get('www-authenticate') || '';
+  assert.match(authenticate, /^Bearer /);
+  assert.ok(authenticate.includes(`resource_metadata="${metadataUrl}"`), `${url} must point to ${metadataUrl}`);
+  const challengeBody = await challengeResponse.text();
+  assert.ok(!/(?:stack|private key|database|access[_-]?token|client[_-]?secret)/i.test(challengeBody), 'The OAuth challenge body exposed private details');
+  const metadataResponse = await fetchChecked(metadataUrl);
+  assert.ok(metadataResponse.ok, `${metadataUrl} returned HTTP ${metadataResponse.status}`);
+  assert.equal((await metadataResponse.json()).resource, url, `${metadataUrl} must name ${url} as its resource`);
+}
 
-console.log(`Verified ${card.tools.length} live tools, ${referencedTools.size} skill references, annotations, schemas, and OAuth challenge behavior.`);
+console.log(`Verified ${card.tools.length} live tools, ${referencedTools.size} skill references, annotations, schemas, and OAuth challenge behavior on both endpoints.`);

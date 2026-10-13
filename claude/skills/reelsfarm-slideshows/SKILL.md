@@ -1,0 +1,62 @@
+---
+name: reelsfarm-slideshows
+description: Create, revise, finalize, and export ReelsFarm slideshow drafts from approved text and image assets. Use for educational, product, listicle, and short-form slideshow workflows.
+---
+
+# ReelsFarm slideshows
+
+Create and revise a slideshow as a draft. Keep text generation, draft changes, image selection, and export as clear stages.
+
+## Tool discovery
+
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`, `reelsfarm_get_generation_pricing`, and `reelsfarm_get_queue_status`. Use `reelsfarm_list_slideshows`, `reelsfarm_get_slideshow`, `reelsfarm_list_product_contexts`, `reelsfarm_list_prompt_templates`, `reelsfarm_list_gallery`, `reelsfarm_list_assets`, `reelsfarm_list_community_collections`, and `reelsfarm_list_community_images` to resolve existing content.
+
+Use `reelsfarm_list_gallery_feed` with `mode: slideshow-picker` and `reelsfarm_get_media_collection_items` to pick owned images as the web slideshow picker does. Set `imageCategory` to `people`, `product`, or `infographics` to narrow generated images, and set `kinds` to return images only. For a large collection, set `limit` and follow `nextCursor` until `hasMore` is false.
+
+Use only authorized ReelsFarm image URLs in slideshow slides. Do not invent assets or silently change slide order.
+
+## ChatGPT follow-ups
+
+In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.
+
+## Connection mode
+
+Read the effective mode from `reelsfarm_get_account` before any mutation. Review returns a prepared confirmation. Creator can execute allowed content work immediately but blocks publishing and automation activation. Autopilot can also execute publishing and automation work within the granted scope and server limits. Use only the actions the user requested. Never change the connection mode to bypass a restriction.
+
+For an authorized action with settled inputs and cost, call the prepare tool with one stable `idempotencyKey`. A prepare tool can execute immediately in Creator or Autopilot. If the response contains a `confirmationId`, follow the confirmation section below. If it already executed, continue with its operation or job. Do not request another approval merely because the tool name starts with prepare. Use `dryRun: true` for previews or unresolved inputs.
+
+## Preparation
+
+Confirm the slideshow type, slide count, product context, text brief, visual source, title, and output format.
+
+Use `reelsfarm_prepare_generate_slideshow_text` for new text. Use `reelsfarm_prepare_revise_slideshow_text` for a conversational revision. After approved text is ready, use `reelsfarm_create_slideshow` for a new draft or `reelsfarm_update_slideshow` for an existing draft.
+
+Both text tools accept the dashboard `effort` presets: `light`, `low`, `medium`, `high`, and `extra_high`. Higher effort uses more visual references (0, 2, 5, 10, or 20) and more model time. `extra_high` also reviews the rendered text layout. Visual references require `maxMode: true`. Without `effort`, send up to five references; with it, up to 20. Give each reference the slide `aspectRatio`, because layout checks assume 1:1 when it is missing. Use the effort the user asks for. The dashboard defaults to `extra_high`; a lower effort returns text faster.
+
+Use `reelsfarm_prepare_finalize_slideshow` only after every slide is approved. Use `reelsfarm_prepare_export_slideshow_video` only when the user asks for an MP4 export. Use `dryRun: true` when cost, inputs, or final output are not settled.
+
+## Confirmation
+
+Apply this section only when the server returns a prepared confirmation.
+
+Show the exact prepared stage, credit estimate, slideshow identifier, slide count, and output type. Get explicit user approval before calling the operation-specific confirmation tool named in the prepared result's `confirmationTool` field. A confirmation for text generation does not approve finalization or video export. Each new prepared confirmation needs separate approval. Do not confirm when a prepare call already executed.
+
+## Job polling
+
+Poll text generation with `reelsfarm_get_slideshow_text_job_status`. Poll revisions with `reelsfarm_get_slideshow_revision_job_status`. Poll finalization with `reelsfarm_get_slideshow_export_job_status`. Poll MP4 export with `reelsfarm_get_slideshow_video_export_job_status`. Stop at complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
+
+## Result integrity
+
+Use `executionState` as the authoritative mutation state. Treat `NOT_STARTED` and `PREPARED` as no execution. Treat `ENQUEUED` and `PROCESSING` as unfinished. Attribute generated or exported media to ReelsFarm only after the ReelsFarm job reports completion and returns the expected ReelsFarm asset URL. Do not present prepared text, unfinished rendering, or a client-native asset as a completed ReelsFarm slideshow export.
+
+## Idempotency
+
+Use one stable `idempotencyKey` per logical text generation, revision, draft mutation, finalization, or export. Reuse the key after a timeout or ambiguous response. Use a new key when the requested slide state or output changes.
+
+## Error recovery
+
+If a mutation response is unclear and includes an operation identifier, call `reelsfarm_get_operation`. Read the slideshow again with `reelsfarm_get_slideshow` before retrying a draft update. Do not repeat finalization or export while a job may still exist. If a confirmation expires, prepare that stage again and request approval again.
+
+## Safe stopping
+
+Stop when paid access is inactive, credits are insufficient, a slide image is unauthorized, slide order is unclear, the requested draft changed during preparation, or the user does not approve. Do not publish, schedule, or permanently delete content from this skill.

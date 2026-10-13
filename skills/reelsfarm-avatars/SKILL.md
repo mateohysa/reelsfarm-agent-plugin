@@ -33,13 +33,13 @@ For an infographic or another dashboard image template, call `reelsfarm_list_ima
 
 For a follow-up image, read the prior turn with `reelsfarm_get_image_generation_conversation`. Preserve both `conversationId` and `parentGenerationId`. Do not silently start a separate conversation.
 
-To save an approved image as a character, use `reelsfarm_prepare_save_character` only after the user selects the exact image and name.
+To save a generated avatar as a character, use `reelsfarm_prepare_save_character` only after the user selects the exact avatar and name. Pass the avatar `imageUrl` from `reelsfarm_list_avatars` or a completed `reelsfarm_get_avatar_job_status` result.
 
 ## Confirmation
 
 Apply this section only when the server returns a prepared confirmation.
 
-Show the prepared action, credit estimate, source image, and expected result. Get explicit user approval before calling `reelsfarm_confirm_action`. Never treat the original creation request as approval of a later prepared confirmation.
+Show the prepared action, credit estimate, source image, and expected result. Get explicit user approval before calling the operation-specific confirmation tool named in the prepared result's `confirmationTool` field. Never treat the original creation request as approval of a later prepared confirmation.
 
 If the prepare call already executed under the connection policy, do not call the confirmation tool again.
 

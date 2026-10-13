@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.7 - 2026-10-13
+
+- Match ReelsFarm MCP 3.8.1 and contract `2026-10-13.2` with 154 public tools.
+- Confirm prepared actions with the operation-specific tool named in `confirmationTool`. MCP 3.7 removed `reelsfarm_confirm_action` from the public tools.
+- Add the Claude plugin in `claude/`, for Anthropic's directory. It connects to the directory endpoint `https://mcp.reelsfarm.com/plugin/mcp`.
+- Save characters from a generated avatar's `imageUrl`.
+
 ## 1.0.6 - 2026-10-11
 
 - Match ReelsFarm MCP 3.6.0 and contract `2026-10-11.1`; the 110 public tools are unchanged.

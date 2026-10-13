@@ -1,0 +1,27 @@
+{
+  "name": "reelsfarm",
+  "displayName": "ReelsFarm",
+  "version": "1.0.7",
+  "description": "Create AI avatar images, product photos, UGC videos, and slideshows with ReelsFarm, then schedule approved posts to your connected social accounts.",
+  "author": {
+    "name": "ReelsFarm",
+    "url": "https://reelsfarm.com"
+  },
+  "homepage": "https://reelsfarm.com/mcp",
+  "repository": "https://github.com/mateohysa/reelsfarm-agent-plugin",
+  "license": "MIT",
+  "keywords": [
+    "reelsfarm",
+    "ugc",
+    "social-media",
+    "content-creation",
+    "video",
+    "slideshow",
+    "scheduling"
+  ],
+  "icon": "./icon.png",
+  "documentationUrl": "https://reelsfarm.com/mcp",
+  "supportUrl": "https://github.com/mateohysa/reelsfarm-agent-plugin/issues",
+  "privacyPolicyUrl": "https://reelsfarm.com/privacy",
+  "termsOfServiceUrl": "https://reelsfarm.com/terms"
+}
