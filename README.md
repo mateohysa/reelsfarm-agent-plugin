@@ -59,7 +59,7 @@ npm test
 npm run validate:live
 ```
 
-The local validator checks the manifests, skill structure, asset references, vendor MCP parity, the Claude plugin folder and its skill copies, and public security boundary. To check the Claude plugin with Claude Code, run `claude plugin validate ./claude --strict`. The live check verifies public URLs, tool schemas, annotations, skill tool names, and the unauthenticated OAuth challenge.
+The local validator checks the manifests, skill structure, asset references, vendor MCP parity, the Claude plugin folder and its skill copies, and public security boundary. To check the Claude plugin with Claude Code, run `claude plugin validate ./claude --strict`. The live check verifies public URLs and the unauthenticated OAuth challenge on both endpoints. It checks each listing against the endpoint it connects to: the root plugin against `/mcp`, and the Claude and ChatGPT directory listings against `/plugin/mcp`, which serves the reviewed version. Every tool a listing's skills name must be on that endpoint's public card, with valid schemas and annotations. It doesn't compare tool counts, because the two endpoints serve different versions on purpose. Set `REELSFARM_MCP_ORIGIN` to run it against another server.
 
 ## Support and security
 
