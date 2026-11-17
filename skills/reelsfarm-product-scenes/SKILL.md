@@ -13,6 +13,8 @@ Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_accoun
 
 Prefer existing owned product assets. Do not invent a filename, identifier, source image, or public URL.
 
+A saved product from `reelsfarm_list_product_contexts` has a name, an optional description, and up to 6 photos in order; the first photo is the main photo. Use `reelsfarm_create_product_context` for a new product and `reelsfarm_update_product_context` to change one. `photoUrls` replaces all photos and takes only the user's own PNG, JPEG, or WebP files. For an app, send its App Store link as `appStoreUrl`. ReelsFarm keeps the app icon and, when no photos are given, saves up to 6 of the app's App Store screenshots as its photos.
+
 ## ChatGPT follow-ups
 
 In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.

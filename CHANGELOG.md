@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.9 - 2026-11-17
+
+- Match ReelsFarm MCP 3.17.0 and contract `2026-11-16.1`. The directory endpoint `https://mcp.reelsfarm.com/plugin/mcp` now offers the 3.17.0 tools for review.
+- Guide Recreate: copy a public TikTok photo slideshow, or a Slideshow Ideas slideshow, for a saved product as a draft.
+- Guide saved slideshow formats and review batches of 1 to 50 slideshows.
+- Guide products with up to 6 photos, App Store links, and product updates.
+- Guide saving prompts to the user's prompt library.
+- Update the video models (`seedance-2.5`, `veo-3.1`, `veo-3.1-fast`, `gemini-omni-1.2-flash`), the prompt rewrite, and the Style choices.
+- Update the image models and the size choices of Nano Banana Pro and FLUX 3.
+- Instagram and Facebook connect natively for every account. Remove the managed account guidance and the AI Clone mentions.
+
 ## 1.0.8 - 2026-10-13
 
 - Use the rounded ReelsFarm logo from the ChatGPT listing as the Claude plugin icon.

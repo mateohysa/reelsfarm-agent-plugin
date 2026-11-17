@@ -13,7 +13,7 @@ Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_accoun
 
 Never choose an account from a platform name alone when more than one eligible account exists. Ask the user to select the exact account. Social account linking and credential changes remain dashboard-only.
 
-An account with `managed: true` was connected by ReelsFarm through its managed Instagram or Facebook integration. Publish to it like any other integration account, and follow its preflight `settingsSchema`.
+TikTok, YouTube, Instagram (Business or Creator), and Facebook Page accounts connect natively in the dashboard. Scheduler integrations that the user connected also appear in `reelsfarm_list_connected_accounts`. Follow each account's preflight `settingsSchema`.
 
 ## ChatGPT follow-ups
 

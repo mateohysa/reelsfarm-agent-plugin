@@ -35,9 +35,11 @@ For a generated hook, use `reelsfarm_prepare_generate_hook`. Treat it as a separ
 
 Use `reelsfarm_prepare_generate_video` for text-to-video, a start frame with an optional end frame, or up to three reference images. Seedance models also accept one reference video and one reference audio file; an audio reference also needs an image or video reference. Do not combine frames with reference media. Use only owned ReelsFarm asset URLs for frames and references.
 
-The models are `seedance-2.5` (default), `seedance-2`, `seedance-2-fast`, `veo-3.1`, `veo-3.1-fast`, and `gemini-omni-1.1-flash`. Read `videoGeneration` from `reelsfarm_get_generation_pricing` and choose a duration, aspect ratio, and resolution that the model supports. `gemini-omni-1.1-flash` always includes audio, so set `includeAudio: true`. Confirm the prompt, model, duration, aspect ratio, audio, library `category`, and any target `collectionId` before the paid action. Use `dryRun: true` for a preview or unsettled inputs.
+The models are `seedance-2.5` (default; 480p, 720p, or 1080p, with an `eco` or `high` quality), `veo-3.1`, `veo-3.1-fast`, and `gemini-omni-1.2-flash`. Veo models always include audio. `gemini-omni-1.2-flash` always includes audio, so set `includeAudio: true`. The retired keys `seedance-2`, `seedance-2-fast`, and `gemini-omni-1.1-flash` still run on the current models; use the current keys. Read `videoGeneration` from `reelsfarm_get_generation_pricing` and choose a duration, aspect ratio, and resolution that the model supports.
 
-One video job runs at a time per account across hooks, AI Clone, and the Videos workbench. If a request fails with `VIDEO_JOB_IN_PROGRESS`, the message names the active job and its status tool. Poll that job until it ends. Then prepare the video again with a new `idempotencyKey`. Do not start a replacement while the active job is running.
+A short prompt is enough. By default (`improvePrompt`), ReelsFarm rewrites the prompt into the form the model follows best and keeps every detail and spoken word; the status result shows the rewritten prompt. `camera`, `look`, and `shots` are the Style choices of the Videos box. Omit them to let the rewrite choose. Confirm the prompt, model, duration, aspect ratio, audio, library `category`, and any target `collectionId` before the paid action. Use `dryRun: true` for a preview or unsettled inputs.
+
+One video job runs at a time per account across hooks and the Videos workbench. If a request fails with `VIDEO_JOB_IN_PROGRESS`, the message names the active job and its status tool. Poll that job until it ends. Then prepare the video again with a new `idempotencyKey`. Do not start a replacement while the active job is running.
 
 ## Confirmation
 

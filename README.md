@@ -13,12 +13,12 @@ The package includes five guided workflows:
 ## Requirements
 
 - A ReelsFarm account.
-- An active plan or eligible trial.
+- A paid ReelsFarm plan to create, schedule, or publish content. An account without a plan can connect and read its content.
 - A client that supports remote MCP servers and OAuth.
 
 The client opens the ReelsFarm OAuth flow when you connect. Do not add API keys, headers, or local environment settings to the included MCP files.
 
-Targets ReelsFarm MCP 3.8.1, contract `2026-10-13.2`, with 154 public tools.
+Targets ReelsFarm MCP 3.17.0, contract `2026-11-16.1`. The Claude plugin and the ChatGPT app use the directory endpoint, `https://mcp.reelsfarm.com/plugin/mcp`, which offers the reviewed set of tools.
 
 New OAuth connections begin in Review mode. The skills require clear user approval before they call the confirmation tool named in the prepared result's `confirmationTool` field. Creator can execute authorized content work immediately. Autopilot can also schedule and publish. The skills read the effective mode and do not confirm an action that already executed.
 
@@ -26,7 +26,7 @@ Publishing workflows use the account-specific preflight settings schema, rules, 
 
 Generated media is attributed to ReelsFarm only when the server reports `provider: reelsfarm`, `executionState: COMPLETED`, `assetCreated: true`, and returns the completed ReelsFarm asset. Avatar-to-video workflows pass the completed ReelsFarm avatar URL directly to the ReelsFarm hook generator.
 
-Video workflows also use the Videos workbench for text-to-video, start and end frames, and reference media. One video job runs at a time per account. Image workflows use the dashboard Product and Infographics templates, and slideshow text uses the dashboard effort presets.
+Video workflows also use the Videos workbench for text-to-video, start and end frames, and reference media. One video job runs at a time per account. Image workflows use the dashboard Product and Infographics templates, and slideshow text uses the dashboard effort presets. Slideshow workflows can recreate a public TikTok photo slideshow for a saved product, and make review batches from saved formats.
 
 ## Install
 

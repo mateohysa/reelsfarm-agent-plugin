@@ -102,7 +102,7 @@ Prompt 2 after preparation: Confirmed.
 
 Prompt 3 after avatar completion: Select or `@mention` ReelsFarm again, then ask: Animate that ReelsFarm avatar as a four-second Seedance hook with a slow camera pan and a natural smile.
 
-Expected: The plugin calls `reelsfarm_prepare_generate_avatar`, waits for approval, calls `reelsfarm_confirm_generate_avatar`, and polls `reelsfarm_get_avatar_job_status`. It uses the completed ReelsFarm `avatar.imageUrl` with `reelsfarm_prepare_generate_hook`, waits for a separate approval, confirms, and polls `reelsfarm_get_generated_hook_status`. It does not use native image generation, `reelsfarm_create_product_upload_sessions`, or `reelsfarm_prepare_ai_clone_job`. It does not claim either asset exists before `executionState: COMPLETED` and `assetCreated: true`.
+Expected: The plugin calls `reelsfarm_prepare_generate_avatar`, waits for approval, calls `reelsfarm_confirm_generate_avatar`, and polls `reelsfarm_get_avatar_job_status`. It uses the completed ReelsFarm `avatar.imageUrl` with `reelsfarm_prepare_generate_hook`, waits for a separate approval, confirms, and polls `reelsfarm_get_generated_hook_status`. It does not use native image generation or `reelsfarm_create_product_upload_sessions`. It does not claim either asset exists before `executionState: COMPLETED` and `assetCreated: true`.
 
 ## Final portal checklist
 

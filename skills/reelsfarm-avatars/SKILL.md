@@ -27,7 +27,9 @@ For an authorized action with settled inputs and cost, call the prepare tool wit
 
 Confirm the intended person, framing, aspect ratio, prompt, model controls, and source image before generation. Use `reelsfarm_prepare_generate_avatar` with `dryRun: true` when the user asks for a preview or when cost or inputs are not settled.
 
-Use `nano-banana-2-1` for Nano Banana 2.1. The legacy `nano-banana-2-pro` key also uses 2.1. Omit quality for Nano Banana models.
+The dashboard default model is `gpt-image-2.6`. Use `nano-banana-2-1` for Nano Banana 2.1. The legacy `nano-banana-2-pro` key also uses 2.1, and the retired `gpt-image-2` key uses GPT Image 2.6. Image models have no quality choice. `quality` picks a size only for Nano Banana Pro (`high` 2K, `max` 4K) and FLUX 3 (`flux-3`: `high` 1.5K, `ultra` 2K, `max` 4K), and the price changes with the size. Other models ignore `quality`. Read the prices from `reelsfarm_get_generation_pricing`.
+
+Use `reelsfarm_save_prompt` with `kind: image` only when the user asks to keep a prompt in their library.
 
 For an infographic or another dashboard image template, call `reelsfarm_list_image_templates`. Replace each `[PLACEHOLDER]` in the template prompt with the user's details. Ask for missing details instead of inventing facts, and remove lines you cannot fill. Start the prompt with the template `categoryLine`. When `requiresProduct` is false, call `reelsfarm_prepare_generate_avatar` in reference mode with `sourceImageUrl` set to the template `referenceUrl` and the listed `model`, `aspectRatio`, and `quality`. When `requiresProduct` is true, use the product scene workflow instead. For a people template, use a reference image from `reelsfarm_list_avatar_templates` with the brief and settings in `peopleTemplate`.
 

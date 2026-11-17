@@ -1,6 +1,6 @@
 ---
 name: reelsfarm-slideshows
-description: Create, revise, finalize, and export ReelsFarm slideshow drafts from approved text and image assets. Use for educational, product, listicle, and short-form slideshow workflows.
+description: Create, recreate, revise, finalize, and export ReelsFarm slideshow drafts, and make review batches from saved formats. Use for educational, product, listicle, TikTok recreate, and short-form slideshow workflows.
 ---
 
 # ReelsFarm slideshows
@@ -9,11 +9,13 @@ Create and revise a slideshow as a draft. Keep text generation, draft changes, i
 
 ## Tool discovery
 
-Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`, `reelsfarm_get_generation_pricing`, and `reelsfarm_get_queue_status`. Use `reelsfarm_list_slideshows`, `reelsfarm_get_slideshow`, `reelsfarm_list_product_contexts`, `reelsfarm_list_prompt_templates`, `reelsfarm_list_gallery`, `reelsfarm_list_assets`, `reelsfarm_list_community_collections`, and `reelsfarm_list_community_images` to resolve existing content.
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`, `reelsfarm_get_generation_pricing`, and `reelsfarm_get_queue_status`. Use `reelsfarm_list_slideshows`, `reelsfarm_get_slideshow`, `reelsfarm_list_product_contexts`, `reelsfarm_list_prompt_templates`, `reelsfarm_list_gallery`, `reelsfarm_list_assets`, `reelsfarm_list_community_collections`, and `reelsfarm_list_community_images` to resolve existing content. Use `reelsfarm_list_slideshow_formats` and `reelsfarm_list_slideshow_batches` to find saved formats and review batches.
 
 Use `reelsfarm_list_gallery_feed` with `mode: slideshow-picker` and `reelsfarm_get_media_collection_items` to pick owned images as the web slideshow picker does. Set `imageCategory` to `people`, `product`, or `infographics` to narrow generated images, and set `kinds` to return images only. For a large collection, set `limit` and follow `nextCursor` until `hasMore` is false.
 
 Use only authorized ReelsFarm image URLs in slideshow slides. Do not invent assets or silently change slide order.
+
+A product from `reelsfarm_list_product_contexts` can have up to 6 photos. Slideshows put the product photos, unchanged, on the slides that show the product, one photo per slide in turn.
 
 ## ChatGPT follow-ups
 
@@ -33,7 +35,21 @@ Use `reelsfarm_prepare_generate_slideshow_text` for new text. Use `reelsfarm_pre
 
 Both text tools accept the dashboard `effort` presets: `light`, `low`, `medium`, `high`, and `extra_high`. Higher effort uses more visual references (0, 2, 5, 10, or 20) and more model time. `extra_high` also reviews the rendered text layout. Visual references require `maxMode: true`. Without `effort`, send up to five references; with it, up to 20. Give each reference the slide `aspectRatio`, because layout checks assume 1:1 when it is missing. Use the effort the user asks for. The dashboard defaults to `extra_high`; a lower effort returns text faster.
 
+Use `reelsfarm_save_prompt` with `kind: slideshow` only when the user asks to keep a prompt in their library.
+
 Use `reelsfarm_prepare_finalize_slideshow` only after every slide is approved. Use `reelsfarm_prepare_export_slideshow_video` only when the user asks for an MP4 export. Use `dryRun: true` when cost, inputs, or final output are not settled.
+
+## Recreate a slideshow
+
+To copy a public TikTok photo slideshow for the user's product, use `reelsfarm_prepare_recreate_slideshow` with its `tiktokUrl`. A slideshow from the Slideshow Ideas library works the same way with its 20-character `slideshowIdeaId`. Send `productContextId` for the product. ReelsFarm reads every slide, keeps the format and each slide's text look, finds a photo for every slide, and writes new text on the same subject. It names the product only where the original names its own product. Put the user's own requests, such as keeping the original wording, in `instructions`. Use the `effort` presets as for the text tools; the default is `extra_high`.
+
+Recreate takes about two minutes. Poll `reelsfarm_get_recreate_slideshow_job_status`. A completed job returns `slideshowId`, a draft. Open it with `reelsfarm_get_slideshow`, change it with `reelsfarm_update_slideshow`, and finalize it as any other draft. Do not publish the draft from this skill.
+
+## Formats and review batches
+
+A saved format holds a content brief (`content`), image rules (`images`), publishing defaults (`publishRules`), and optional per-slide directions, with the same fields as automations. Use `reelsfarm_save_slideshow_format` to create a format, or to replace one with its `formatId`. `content.recreateUrl` copies a public TikTok photo slideshow, and the format then takes that slideshow's slide count. Use `reelsfarm_archive_slideshow_format` only when the user asks to archive a format. Its batches and slideshows stay.
+
+Use `reelsfarm_prepare_create_slideshow_batch` to make 1 to 50 draft slideshows from a format for review. Each slideshow costs the slideshow generation price (`creditsPerSlideshow`). When the format sets `images.generatedPhotos`, each picture also costs that image model's price. A batch posts nothing. Poll `reelsfarm_get_slideshow_batch` with the returned `batchId`. A `READY` item has a `slideshowId`. Use `reelsfarm_prepare_retry_slideshow_batch_item` for a `FAILED` item. Use `reelsfarm_exclude_slideshow_batch_item` to remove a `READY` item from the review; the slideshow stays in the library.
 
 ## Confirmation
 
@@ -43,7 +59,7 @@ Show the exact prepared stage, credit estimate, slideshow identifier, slide coun
 
 ## Job polling
 
-Poll text generation with `reelsfarm_get_slideshow_text_job_status`. Poll revisions with `reelsfarm_get_slideshow_revision_job_status`. Poll finalization with `reelsfarm_get_slideshow_export_job_status`. Poll MP4 export with `reelsfarm_get_slideshow_video_export_job_status`. Stop at complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
+Poll text generation with `reelsfarm_get_slideshow_text_job_status`. Poll revisions with `reelsfarm_get_slideshow_revision_job_status`. Poll Recreate with `reelsfarm_get_recreate_slideshow_job_status` and review batches with `reelsfarm_get_slideshow_batch`. Poll finalization with `reelsfarm_get_slideshow_export_job_status`. Poll MP4 export with `reelsfarm_get_slideshow_video_export_job_status`. Stop at complete, failed, or cancelled. Use `waitMs: 25000` for a bounded wait on these job status tools. Omit it or use 0 for an immediate snapshot. Read `jobProgress.step`, `terminal`, and recorded batch counts. For immediate polling, follow `jobProgress.nextPollAfterMs`. A bounded wait can start immediately. Do not invent percentages or provider stages. Check item results for partial failures even when a batch completes.
 
 ## Result integrity
 
@@ -51,7 +67,7 @@ Use `executionState` as the authoritative mutation state. Treat `NOT_STARTED` an
 
 ## Idempotency
 
-Use one stable `idempotencyKey` per logical text generation, revision, draft mutation, finalization, or export. Reuse the key after a timeout or ambiguous response. Use a new key when the requested slide state or output changes.
+Use one stable `idempotencyKey` per logical text generation, revision, Recreate, batch, format change, draft mutation, finalization, or export. Reuse the key after a timeout or ambiguous response. Use a new key when the requested slide state or output changes.
 
 ## Error recovery
 
@@ -59,4 +75,4 @@ If a mutation response is unclear and includes an operation identifier, call `re
 
 ## Safe stopping
 
-Stop when paid access is inactive, credits are insufficient, a slide image is unauthorized, slide order is unclear, the requested draft changed during preparation, or the user does not approve. Do not publish, schedule, or permanently delete content from this skill.
+Stop when paid access is inactive, credits are insufficient, a slide image is unauthorized, a TikTok link is not a public photo slideshow, slide order is unclear, the requested draft changed during preparation, or the user does not approve. Do not publish, schedule, or permanently delete content from this skill.
