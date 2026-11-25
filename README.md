@@ -18,7 +18,7 @@ The package includes five guided workflows:
 
 The client opens the ReelsFarm OAuth flow when you connect. Do not add API keys, headers, or local environment settings to the included MCP files.
 
-Targets ReelsFarm MCP 3.17.0, contract `2026-11-16.1`. The Claude plugin and the ChatGPT app use the directory endpoint, `https://mcp.reelsfarm.com/plugin/mcp`, which offers the reviewed set of tools.
+Targets ReelsFarm MCP 3.18.0, contract `2026-11-25.1`. The Claude plugin and the ChatGPT app use the directory endpoint, `https://mcp.reelsfarm.com/plugin/mcp`, which offers the reviewed set of tools.
 
 New OAuth connections begin in Review mode. The skills require clear user approval before they call the confirmation tool named in the prepared result's `confirmationTool` field. Creator can execute authorized content work immediately. Autopilot can also schedule and publish. The skills read the effective mode and do not confirm an action that already executed.
 

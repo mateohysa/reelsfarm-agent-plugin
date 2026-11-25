@@ -17,6 +17,12 @@ Use only authorized ReelsFarm image URLs in slideshow slides. Do not invent asse
 
 A product from `reelsfarm_list_product_contexts` can have up to 6 photos. Slideshows put the product photos, unchanged, on the slides that show the product, one photo per slide in turn.
 
+## Templates
+
+When the user wants slideshow ideas or examples, or asks for a slideshow, call `reelsfarm_find_slideshow_templates` first. It finds proven TikTok photo slideshows from the ReelsFarm template library that fit the request, by meaning, and prefers posts with more views. Pass the user's words as `request` and the subject in a few English words as `topic`. Add `promotes` (`product`, `app` or `audience`) and `niche` when they are clear. The tool uses no credits and works on every account. Ask for 3 templates unless the user wants another number. Each template shows as a row of its slides; do not repeat every slide in text. When the user asks for more, pass the `slideshowIdeaId` values already shown as `exclude`.
+
+To make a template for the user's product, pass its `slideshowIdeaId` to `reelsfarm_prepare_recreate_slideshow`. When the result says the account needs a plan to create, say so in one sentence and do not call paid tools. When a paid slideshow or automation tool answers that the account needs a plan, show 3 templates for the same request if you have not shown examples yet, so the user sees what such a slideshow looks like, and say that making one needs a plan.
+
 ## ChatGPT follow-ups
 
 In ChatGPT, ReelsFarm app selection applies to one user message. A follow-up that needs another ReelsFarm tool call must select or `@mention` ReelsFarm again. If the current turn has no ReelsFarm tools, do not claim that ReelsFarm lacks the requested capability and do not substitute a native generator. Ask the user to select ReelsFarm and resend the action. Discussing an existing result without a new tool call does not require reselection.

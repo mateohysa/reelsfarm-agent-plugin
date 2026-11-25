@@ -11,6 +11,8 @@ Build a user-generated content (UGC) video from exact ReelsFarm assets, or gener
 
 Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`, `reelsfarm_get_generation_pricing`, and `reelsfarm_get_queue_status`. Resolve assets with `reelsfarm_list_template_hooks`, `reelsfarm_list_generated_hooks`, `reelsfarm_list_assets`, `reelsfarm_search_assets`, `reelsfarm_list_music_tracks`, `reelsfarm_list_drafts`, and `reelsfarm_list_videos`.
 
+When paid access is not active, or the user asks for video ideas, styles or examples, call `reelsfarm_show_video_examples`; it uses no credits. Each clip gives the `reelsfarm_prepare_generate_video` field and value for that style. Without a plan, say in one sentence that making one needs a plan.
+
 Use exact returned identifiers and URLs. Never infer an asset from a similar name when more than one match exists. `reelsfarm_list_videos` accepts a library `category` of `people`, `product`, or `scenes` and returns `totalCount`. Use `totalCount` to report how many videos the user has.
 
 ## ChatGPT follow-ups

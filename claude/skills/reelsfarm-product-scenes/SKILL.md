@@ -9,7 +9,7 @@ Create a Product Studio image from an exact avatar or template layout and a prod
 
 ## Tool discovery
 
-Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and `reelsfarm_get_generation_pricing`. Resolve owned inputs with `reelsfarm_list_avatars`, `reelsfarm_list_characters`, `reelsfarm_list_assets`, `reelsfarm_search_assets`, and `reelsfarm_list_gallery`. Use `reelsfarm_list_image_templates` with `category: product` for dashboard product photo templates. Use `reelsfarm_list_active_image_generation_jobs` to inspect unfinished image work.
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and `reelsfarm_get_generation_pricing`. Resolve owned inputs with `reelsfarm_list_avatars`, `reelsfarm_list_characters`, `reelsfarm_list_assets`, `reelsfarm_search_assets`, and `reelsfarm_list_gallery`. Use `reelsfarm_list_image_templates` with `category: product` for dashboard product photo templates. Use `reelsfarm_list_active_image_generation_jobs` to inspect unfinished image work. When paid access is not active, or the user asks for product photo ideas or examples, call `reelsfarm_find_image_examples` with the request and kind `product`; it uses no credits. Without a plan, say in one sentence that making one needs a plan.
 
 Prefer existing owned product assets. Do not invent a filename, identifier, source image, or public URL.
 

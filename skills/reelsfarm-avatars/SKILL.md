@@ -9,7 +9,7 @@ Create or revise an avatar through the hosted ReelsFarm MCP server. Keep the use
 
 ## Tool discovery
 
-Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account` and stop if paid access is not active. Use `reelsfarm_get_generation_pricing` before paid generation. Use `reelsfarm_list_avatar_templates`, `reelsfarm_list_image_templates`, `reelsfarm_list_avatars`, `reelsfarm_list_characters`, and `reelsfarm_list_gallery` to resolve existing inputs. Use `reelsfarm_list_active_image_generation_jobs` when the user asks about unfinished work.
+Discover the ReelsFarm MCP tools before acting. Start with `reelsfarm_get_account`. If paid access is not active, call `reelsfarm_find_image_examples` with the request (kind `people` for avatars), say in one sentence that making one needs a plan, and stop. Use `reelsfarm_get_generation_pricing` before paid generation. Use `reelsfarm_list_avatar_templates`, `reelsfarm_list_image_templates`, `reelsfarm_list_avatars`, `reelsfarm_list_characters`, and `reelsfarm_list_gallery` to resolve existing inputs. Use `reelsfarm_list_active_image_generation_jobs` when the user asks about unfinished work.
 
 Never invent an asset identifier or URL. Use only an owned ReelsFarm asset or a public HTTPS source that the selected tool accepts.
 
