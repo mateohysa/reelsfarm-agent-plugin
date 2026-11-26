@@ -3,7 +3,7 @@
 ## 1.0.10 - 2026-11-25
 
 - Match ReelsFarm MCP 3.18.0 and contract `2026-11-25.1`.
-- Guide the free examples, which work on every account without a plan or credits: `reelsfarm_find_slideshow_templates` (proven TikTok photo slideshows from the template library), `reelsfarm_find_image_examples` (product, people and infographic images, plus community photos for slides) and `reelsfarm_show_video_examples` (the Look, Shots and camera move clips of the Videos box).
+- Guide the free examples, which work on every account without a plan or credits: `reelsfarm_find_slideshow_templates` (slideshow templates from the template library), `reelsfarm_find_image_examples` (product, people and infographic images, plus community photos for slides) and `reelsfarm_show_video_examples` (the Look, Shots and camera move clips of the Videos box).
 - When a tool answers that the account needs a plan, show the matching examples once, then say that making one needs a plan.
 - Show more examples with `exclude`, which leaves out the ones already shown.
 
